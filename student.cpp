@@ -1,4 +1,5 @@
 #include "student.h"
+#include "menu.h"
 #include "check.h"
 student::student()
 {
@@ -12,6 +13,46 @@ student::student()
 
 int student::count = 0;
 
+const student_dat mark = {0, "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+void student::signup()
+{
+    student_dat s;
+    char key[15];
+    set_phone_number();
+    strcpy_s(key, phone_number.c_str());
+    s.check = 1;
+    fstream fr("stu.dat", ios::in | ios::out | ios::binary);
+    //查找文件尾
+    fr.seekg(0, ios::beg);
+    do
+    {
+        fr.read((char *)&s, sizeof(student_dat));
+    } while (strcmp(key,s.phone_number)&&!endmark(s));
+    if(strcmp(key,s.phone_number)==0)
+    {
+        cout << "用户已存在！" << endl;
+        fr.close();
+        return;
+    }
+    else 
+    {
+    set_name();
+    set_password();
+    set_basic_info();
+    strcpy_s(s.name, name.c_str());                   //有空记得把user的name和password改成char[]
+    strcpy_s(s.password, password.c_str());
+    strcpy_s(s.phone_number, phone_number.c_str());
+    strcpy_s(s.province, province.c_str());
+    strcpy_s(s.nation, nation.c_str());
+    strcpy_s(s.political_status, political_status.c_str());
+    strcpy_s(s.school_name, school_name.c_str());
+    fr.seekp(-long(sizeof(student_dat)), ios::cur);
+    fr.write((char *)&s, sizeof(student_dat)); //写记录
+    fr.write((char *)&mark, sizeof(student_dat));    //写结束标志
+    cout << "注册成功！" << endl;
+    fr.close();
+    }
+}
 void student::set_province()
 {
     string province;
@@ -134,5 +175,10 @@ void student::show()
     cout << "手机号码：" << phone_number << endl;
     cout << "民族：" << nation << endl;
     cout << "政治面貌：" << political_status << endl;
-    cout << "学校名称：" << school_name <<"\n"<< endl;
+    cout << "学校名称：" << school_name << "\n" << endl;
+}
+
+bool endmark(student_dat s)
+{
+    return s.check == 0;
 }

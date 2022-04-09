@@ -26,4 +26,18 @@ public:
     void set_school_name();
 };
 
+struct student_dat
+{
+    bool check;
+    char student_number[30];
+    char province[10];
+    char nation[10];
+    char political_status[15];
+    char school_name[50];
+    char name[20];
+    char password[32];
+    char phone_number[15];
+};
+
+bool endmark(student_dat);
 #endif

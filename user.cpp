@@ -1,6 +1,6 @@
 #include "user.h"
 #include "check.h"
-
+#include "menu.h"
 user::user()
 {
     id = "未填写";
@@ -8,13 +8,6 @@ user::user()
     password = "";
     phone_number = "未填写";
     authority = 0;
-}
-
-user::user(string name, string password, int authority) //测试用后门
-{
-    this->name = name;
-    this->password = password;
-    this->authority = authority;
 }
 
 void user::set_name()
