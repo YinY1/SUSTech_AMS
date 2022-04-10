@@ -44,9 +44,9 @@ string base64_encode(const string &bytes_to_encode)
     return ret;
 }
 
-string base64_decode(const string &encoded_string)
+string base64_decode(const char encoded_string[])
 {
-    size_t in_len = encoded_string.size();
+    size_t in_len = strlen(encoded_string);
     int i = 0;
     int j = 0;
     int in_ = 0;

@@ -2,6 +2,7 @@
 #include "student.h"
 #include "user.h"
 #include "menu.h"
+#include "base64.h"
 #include <fstream>
 #include <iostream>
 #include <string>

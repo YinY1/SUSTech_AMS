@@ -16,11 +16,12 @@ protected:
     int authority;
 
 public:
-    //virtual void signup() = 0;
+    virtual void signup() = 0;
     //virtual void login();
     virtual void show() = 0;
     user();
-    virtual void signup()=0;
+    virtual bool read(char [])=0;
+    virtual void write(char [])=0;
     void set_password();
     void set_phone_number();
     void set_id();

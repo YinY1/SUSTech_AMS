@@ -18,25 +18,28 @@ public:
     student();
     void signup();
     void show();
+    void set_basic_info();
     void set_province();
     void set_student_number();
-    void set_basic_info();
     void set_nation();
     void set_political_status();
     void set_school_name();
+    bool read(char[]);
+    void write(char[]);
 };
 
 struct student_dat
 {
     bool check;
-    char student_number[30];
+    char id[30];
+    char student_number[50];
     char province[10];
     char nation[10];
-    char political_status[15];
+    char political_status[30];
     char school_name[50];
-    char name[20];
-    char password[32];
-    char phone_number[15];
+    char name[30];
+    char password[50];
+    char phone_number[20];
 };
 
 bool endmark(student_dat);

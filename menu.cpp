@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "user.h"
+#include "admin.h"
 #include "student.h"
 //const userdat mark = {0, "noname\0", "nopassword\0", "nonumber\0"};
 const student_dat mark = {0, "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};

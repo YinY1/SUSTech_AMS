@@ -16,7 +16,7 @@ struct userdat
 
 void menu_start();
 void menu_login();
-void sti_init();
+void stu_init();
 
 #endif
 
