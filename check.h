@@ -3,20 +3,10 @@
 
 #include <iostream>
 
-using namespace std;
-
-bool id_check(string id);
-bool password_check(string password);
-bool province_check(string province);
-bool phone_check(string num);
-bool nation_check(string nation);
-inline void cls()
-{
-    system("cls");
-}
-inline void pause()
-{
-    system("pause");
-}
+bool id_check(std::string id);
+bool password_check(std::string password);
+bool province_check(std::string province);
+bool phone_check(std::string num);
+bool nation_check(std::string nation);
 
 #endif

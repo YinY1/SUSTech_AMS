@@ -1,5 +1,5 @@
 #include "base64.h"
-
+using namespace std;
 //https://zhuanlan.zhihu.com/p/103336186
 //https://github.com/ReneNyffenegger/cpp-base64
 

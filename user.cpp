@@ -1,6 +1,7 @@
 #include "user.h"
 #include "check.h"
 #include "menu.h"
+using namespace std;
 user::user()
 {
     id = "未填写";
