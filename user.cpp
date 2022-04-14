@@ -2,19 +2,23 @@
 #include "check.h"
 #include "menu.h"
 using namespace std;
-user::user()
-{
-    id = "未填写";
-    name = "未填写";
-    password = "";
-    phone_number = "未填写";
-    authority = 0;
-}
 
 void user::set_name()
 {
+    string name;
     cout << "请输入姓名：" << endl;
-    cin >> name;
+    while(cin >> name)
+    {
+        if(name.length()<45)
+        {
+            strcpy_s(this->name, name.c_str());
+            break;
+        }
+        else
+        {
+            cout << "姓名过长，请重新输入：" << endl;
+        }
+    }
 }
 
 void user::set_phone_number()
@@ -27,7 +31,7 @@ void user::set_phone_number()
         cin >> num;
         check = phone_check(num);
     }
-    this->phone_number = num;
+    strcpy_s(this->phone_number, num.c_str());
 }
 
 void user::set_password()
@@ -41,7 +45,7 @@ void user::set_password()
         getline(cin, password);
         check = password_check(password); //检查密码是否合法
     }
-    this->password = password;
+    strcpy_s(this->password, password.c_str());
 }
 
 void user::set_id()
@@ -55,9 +59,9 @@ void user::set_id()
         cin >> id;
         check = id_check(id); //判断身份证号码是否合法
     }
-    this->id = id;
+    strcpy_s(this->id, id.c_str());
     if (id[17] % 2) //判断性别,身份证第17位为奇数为男，偶数为女
-        gender = "男";
+        strcpy_s(this->gender, "男");
     else
-        gender = "女";
+        strcpy_s(this->gender, "女");
 }

@@ -8,15 +8,15 @@
 class user
 {
 protected:
-    std::string name;
-    std::string id;
-    std::string password;
-    std::string phone_number;
-    std::string gender; //性别
-    int authority;
+    char phone_number[15]={"nophone"};
+    char name[50]={};
+    char id[20]={};
+    char password[20]={};
+    char gender[5]={}; //性别
+    int authority=0;
 
 public:
-    user();
+    user(){}
     virtual void signup() = 0;
     // virtual void login();
     virtual void show(int) = 0;
@@ -26,6 +26,10 @@ public:
     void set_phone_number();
     void set_id();
     void set_name();
+    std::string get_phone()
+    {
+        return phone_number;
+    }
 };
 
 #endif

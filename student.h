@@ -6,22 +6,22 @@
 #include <fstream>
 class student : public user
 {
-    std::string student_number;   //学籍号
-    std::string province;         //省份
-    std::string nation;           //民族
-    std::string political_status; //政治面貌
-    std::string school_name;      //学校名称
-    std::string dad_name;         //父亲姓名
-    std::string mom_name;         //母亲姓名
-    std::string dad_phone_number; //父亲电话
-    std::string mom_phone_number; //母亲电话
-    std::string dad_job;          //父亲职业
-    std::string mom_job;          //母亲职业
-    std::string dad_work_address;   //父亲工作单位
-    std::string mom_work_address;   //母亲工作单位
+    char student_number[50]={};     //学籍号
+    char province[10]={};           //省份
+    char nation[10]={};             //民族
+    char political_status[30]={};   //政治面貌
+    char school_name[50]={};        //学校名称
+    char dad_name[20]={};           //父亲姓名
+    char mom_name[20]={};           //母亲姓名
+    char dad_phone_number[20]={};   //父亲电话
+    char mom_phone_number[20]={};   //母亲电话
+    char dad_job[20]={};            //父亲职业
+    char mom_job[20]={};            //母亲职业
+    char dad_work_address[50]={};   //父亲工作地址
+    char mom_work_address[50]={};   //母亲工作地址
 
 public:
-    student();
+    student() { authority = 1; }
     void signup();
     bool login();
     void show(int);
@@ -36,26 +36,6 @@ public:
     void write(int);
 };
 
-struct student_dat
-{
-    char phone_number[20];
-    char id[30];
-    char student_number[50];
-    char province[10];
-    char nation[10];
-    char political_status[30];
-    char school_name[50];
-    char name[30];
-    char password[50];
-    char dad_name[20];
-    char mom_name[20];
-    char dad_phone_number[20];
-    char mom_phone_number[20];
-    char dad_job[20];
-    char mom_job[20];
-    char dad_work_address[50];
-    char mom_work_address[50];
-};
 
-bool endmark(student_dat);
+bool endmark(student);
 #endif

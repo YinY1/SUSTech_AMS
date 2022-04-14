@@ -6,30 +6,13 @@
 //所以不要在头文件using,实在不想打std::可以在cpp里面using，尽量不要using namespace，除非确定没有重复。
 using namespace std;
 
-student::student()
-{
-    authority = 1;
-    province = "";
-    nation = "";
-    political_status = "";
-    school_name = "";
-    dad_name = "";
-    mom_name = "";
-    dad_phone_number = "";
-    mom_phone_number = "";
-    dad_job = "";
-    mom_job = "";
-    dad_work_address = "";
-    mom_work_address = "";
-}
-
-const student_dat mark = {"nophone", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+const student mark = student();
 
 void student::signup()
 {
     char key[15];
     set_phone_number();
-    strcpy_s(key, phone_number.c_str());
+    strcpy_s(key, phone_number);
     //查重
     if (read(key, 0))
     {
@@ -138,9 +121,10 @@ void student::set_province()
         cin >> province;
         check = province_check(province); //判断省份是否合法
     }
-    this->province = province;
+    strcpy_s(this->province,province.c_str());
 }
 
+//可能有问题
 void student::set_student_number()
 {
     cout << "\n请输入学籍号：" << endl;
@@ -165,13 +149,26 @@ void student::set_nation()
         cin >> nation;
         check = nation_check(nation); //判断民族是否合法
     }
-    this->nation = nation;
+    strcpy_s(this->nation,nation.c_str());
 }
 
 void student::set_school_name()
 {
+    string school_name;
     cout << "\n请输入学校名称：" << endl;
-    cin >> school_name;
+    while(cin >> school_name)
+    {
+        if (school_name.length()<45)
+        {
+            strcpy_s(this->school_name,school_name.c_str());
+            break;
+        }
+        else
+        {
+            cout << "学校名称过长！请重新输入！" << endl;
+        }
+    }
+    strcpy_s(this->school_name,school_name.c_str());
 }
 
 void student::set_political_status()
@@ -184,7 +181,7 @@ void student::set_political_status()
     {
         if (num > 0 && num < 14)
         {
-            political_status = p[num - 1];
+            strcpy_s(political_status, p[num - 1]);
             break;
         }
         else
@@ -267,12 +264,12 @@ void student::show(int choice)
 
 bool student::read(char key[], int choice)
 {
-    student_dat r;
+    student r;
     fstream f("stu.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
-        f.read((char *)&r, sizeof(student_dat));
+        f.read((char *)&r, sizeof(student));
     } while (strcmp(key, r.phone_number) && !endmark(r));
     if (strcmp(key, r.phone_number))
     {
@@ -293,7 +290,7 @@ bool student::read(char key[], int choice)
             {
                 cout << "\n登录成功！" << endl;
                 //登录后读取用户信息
-                id = base64_decode(r.id);
+                /* strcpy_s(id ,base64_decode(r.id).c_str());
                 student_number = base64_decode(r.student_number);
                 province = base64_decode(r.province);
                 nation = base64_decode(r.nation);
@@ -309,7 +306,7 @@ bool student::read(char key[], int choice)
                 mom_name = base64_decode(r.mom_name);
                 mom_phone_number = base64_decode(r.mom_phone_number);
                 mom_job = base64_decode(r.mom_job);
-                mom_work_address = base64_decode(r.mom_work_address);
+                mom_work_address = base64_decode(r.mom_work_address); */
                 break;
             }
             cout << "\n密码错误，请重新输入：" << endl;
@@ -323,7 +320,7 @@ bool student::read(char key[], int choice)
 
 void student::write(int choice)
 {
-    student_dat w;
+    student w;
     fstream f("stu.dat", ios::in | ios::out | ios::binary);
     f.seekp(0, ios::beg);
     switch (choice)
@@ -332,24 +329,24 @@ void student::write(int choice)
     {
         do
         {
-            f.read((char *)&w, sizeof(student_dat));
+            f.read((char *)&w, sizeof(student));
         } while (!endmark(w));
-        f.seekp(-long(sizeof(student_dat)), ios::cur);
+        f.seekp(-long(sizeof(student)), ios::cur);
         set_name();
         set_password();
         set_basic_info();
         //用base64简单加密了一下
         strcpy_s(w.name, base64_encode(name).c_str());
         strcpy_s(w.password, base64_encode(password).c_str());
-        strcpy_s(w.phone_number, phone_number.c_str());
+        strcpy_s(w.phone_number, phone_number);
         strcpy_s(w.province, base64_encode(province).c_str());
         strcpy_s(w.nation, base64_encode(nation).c_str());
         strcpy_s(w.political_status, base64_encode(political_status).c_str());
         strcpy_s(w.school_name, base64_encode(school_name).c_str());
         strcpy_s(w.student_number, base64_encode(student_number).c_str());
         strcpy_s(w.id, base64_encode(id).c_str());
-        f.write((char *)&w, sizeof(student_dat));
-        f.write((char *)&mark, sizeof(student_dat));
+        f.write((char *)&w, sizeof(student));
+        f.write((char *)&mark, sizeof(student));
         cout << "注册成功" << endl;
         break;
     }
@@ -357,17 +354,17 @@ void student::write(int choice)
     {
         do
         {
-            f.read((char *)&w, sizeof(student_dat));
-        } while (strcmp(phone_number.c_str(), w.phone_number));
+            f.read((char *)&w, sizeof(student));
+        } while (strcmp(phone_number, w.phone_number));
         //置写指针位置，设置错误会覆盖信息
-        f.seekp(-long(sizeof(student_dat)), ios::cur);
+        f.seekp(-long(sizeof(student)), ios::cur);
         strcpy_s(w.dad_name, base64_encode(dad_name).c_str());
         strcpy_s(w.dad_phone_number, base64_encode(dad_phone_number).c_str());
         strcpy_s(w.mom_name, base64_encode(mom_name).c_str());
         strcpy_s(w.mom_phone_number, base64_encode(mom_phone_number).c_str());
         strcpy_s(w.dad_work_address, base64_encode(dad_work_address).c_str());
         strcpy_s(w.mom_work_address, base64_encode(mom_work_address).c_str());
-        f.write((char *)&w, sizeof(student_dat));
+        f.write((char *)&w, sizeof(student));
         cout << "家长信息写入成功" << endl;
         break;
     }
@@ -377,7 +374,7 @@ void student::write(int choice)
     f.close();
 }
 
-bool endmark(student_dat s)
+bool endmark(student s)
 {
-    return strcmp(s.phone_number, "nophone") == 0;
+    return strcmp((s.get_phone()).c_str(), "nophone") == 0;
 }

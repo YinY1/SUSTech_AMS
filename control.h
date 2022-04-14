@@ -1,3 +1,6 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+
 #include<windows.h>
 
 inline void cls()
@@ -12,3 +15,5 @@ inline void sleep()
 {
    Sleep(500);
 }
+
+#endif

@@ -42,12 +42,12 @@ void menu_start()
     }
 }
 
-const student_dat mark = {"nophone", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+const student mark = student();
 void stu_init()
 {
     fstream outfile("stu.dat", ios::out | ios::binary);
     outfile.seekp(0, ios::beg);
-    outfile.write((char *)&mark, sizeof(student_dat));
+    outfile.write((char *)&mark, sizeof(student));
     cout << "初始化完成" << endl;
     outfile.close();
 }
