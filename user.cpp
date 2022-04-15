@@ -1,7 +1,19 @@
 #include "user.h"
 #include "check.h"
-#include "menu.h"
 using namespace std;
+
+string user::set_phone_number()
+{
+    string num;
+    bool check = 0;
+    cout << "请输入手机号码：" << endl;
+    while (!check)
+    {
+        cin >> num;
+        check = phone_check(num);
+    }
+    return num;
+}
 
 void user::set_name()
 {
@@ -19,19 +31,6 @@ void user::set_name()
             cout << "姓名过长，请重新输入：" << endl;
         }
     }
-}
-
-void user::set_phone_number()
-{
-    string num;
-    bool check = 0;
-    cout << "请输入手机号码：\n(手机号码作为登录和找回密码的依据)" << endl;
-    while (!check)
-    {
-        cin >> num;
-        check = phone_check(num);
-    }
-    strcpy_s(this->phone_number, num.c_str());
 }
 
 void user::set_password()

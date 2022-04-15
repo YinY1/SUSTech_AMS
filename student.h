@@ -2,7 +2,6 @@
 #define STUDENT_H
 
 #include "user.h"
-#include "control.h"
 #include <fstream>
 class student : public user
 {

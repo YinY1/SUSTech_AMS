@@ -10,11 +10,9 @@ const student mark = student();
 
 void student::signup()
 {
-    char key[15];
-    set_phone_number();
-    strcpy_s(key, phone_number);
+    strcpy_s(phone_number, set_phone_number().c_str());
     //查重
-    if (read(key, 0))
+    if (read(phone_number, 0))
     {
         cout << "用户已存在！" << endl;
         return;
@@ -50,67 +48,6 @@ bool student::login()
     return 0;
 }
 
-void student::set_parents_info()
-{
-    cout << "\n请选择需要填写的信息：\n"
-         << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
-         << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回" << endl;
-    int choice;
-    while (cin >> choice)
-    {
-        switch (choice)
-        {
-        case 1:
-            cout << "请输入父亲姓名：" << endl;
-            cin >> dad_name;
-            break;
-        case 2:
-            cout << "请输入母亲姓名：" << endl;
-            cin >> mom_name;
-            break;
-        case 3:
-            cout << "请输入父亲联系方式：" << endl;
-            cin >> dad_phone_number;
-            break;
-        case 4:
-            cout << "请输入母亲联系方式：" << endl;
-            cin >> mom_phone_number;
-            break;
-        case 5:
-            cout << "请输入父亲工作地址：" << endl;
-            cin >> dad_work_address;
-            break;
-        case 6:
-            cout << "请输入母亲工作地址：" << endl;
-            cin >> mom_work_address;
-            break;
-        case 7:
-            cout << "请输入父亲职业：" << endl;
-            cin >> dad_job;
-            break;
-        case 8:
-            cout << "请输入母亲职业：" << endl;
-            cin >> mom_job;
-            break;
-        case 9:
-            show(1);
-            pause();
-            break;
-        case 0:
-            write(1);
-            cls();
-            return;
-        default:
-            cout << "\n输入错误！请重新输入！" << endl;
-            break;
-        }
-        cout << "\n请选择需要填写的信息：\n"
-                 << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
-                 << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回"
-                 << endl;
-    }
-}
-
 void student::set_province()
 {
     string province;
@@ -121,15 +58,14 @@ void student::set_province()
         cin >> province;
         check = province_check(province); //判断省份是否合法
     }
-    strcpy_s(this->province,province.c_str());
+    strcpy_s(this->province, province.c_str());
 }
 
-//可能有问题
 void student::set_student_number()
 {
     cout << "\n请输入学籍号：" << endl;
     cin >> student_number;
-    cout << "请再次输入学籍号！一旦确认后无法更改！" << endl;
+    cout << "请再次输入学籍号！" << endl;
     string check;
     cin >> check;
     if (check != student_number)
@@ -149,18 +85,18 @@ void student::set_nation()
         cin >> nation;
         check = nation_check(nation); //判断民族是否合法
     }
-    strcpy_s(this->nation,nation.c_str());
+    strcpy_s(this->nation, nation.c_str());
 }
 
 void student::set_school_name()
 {
     string school_name;
     cout << "\n请输入学校名称：" << endl;
-    while(cin >> school_name)
+    while (cin >> school_name)
     {
-        if (school_name.length()<45)
+        if (school_name.length() < 45)
         {
-            strcpy_s(this->school_name,school_name.c_str());
+            strcpy_s(this->school_name, school_name.c_str());
             break;
         }
         else
@@ -168,7 +104,7 @@ void student::set_school_name()
             cout << "学校名称过长！请重新输入！" << endl;
         }
     }
-    strcpy_s(this->school_name,school_name.c_str());
+    strcpy_s(this->school_name, school_name.c_str());
 }
 
 void student::set_political_status()
@@ -220,16 +156,74 @@ void student::set_basic_info()
             break;
         case 0:
             cls();
+            write(1);
             return;
         default:
             cout << "输入错误，请重新输入" << endl;
-            set_basic_info();
             break;
         }
         cout << "\n请输入想要更改的信息：\n1.学校名称\n2.民族\n3.政治面貌\n4.高考省份\n5.学籍号\n6.身份证\n7.显示目前信息\n0.退出\n"
              << endl;
     }
-    cls();
+}
+
+void student::set_parents_info()
+{
+    cout << "\n请选择需要填写的信息：\n"
+         << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
+         << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回" << endl;
+    int choice;
+    while (cin >> choice)
+    {
+        switch (choice)
+        {
+        case 1:
+            cout << "请输入父亲姓名：" << endl;
+            cin >> dad_name;
+            break;
+        case 2:
+            cout << "请输入母亲姓名：" << endl;
+            cin >> mom_name;
+            break;
+        case 3:
+            strcpy_s(dad_phone_number, set_phone_number().c_str());
+            break;
+        case 4:
+            strcpy_s(mom_phone_number, set_phone_number().c_str());
+            break;
+        case 5:
+            cout << "请输入父亲工作地址：" << endl;
+            cin >> dad_work_address;
+            break;
+        case 6:
+            cout << "请输入母亲工作地址：" << endl;
+            cin >> mom_work_address;
+            break;
+        case 7:
+            cout << "请输入父亲职业：" << endl;
+            cin >> dad_job;
+            break;
+        case 8:
+            cout << "请输入母亲职业：" << endl;
+            cin >> mom_job;
+            break;
+        case 9:
+            show(1);
+            pause();
+            break;
+        case 0:
+            write(2);
+            cls();
+            return;
+        default:
+            cout << "\n输入错误！请重新输入！" << endl;
+            break;
+        }
+        cout << "\n请选择需要填写的信息：\n"
+             << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
+             << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回"
+             << endl;
+    }
 }
 
 void student::show(int choice)
@@ -242,7 +236,7 @@ void student::show(int choice)
              << "\n学籍号：" << student_number
              << "\n身份证号码：" << id
              << "\n高考省份（地区）：" << province
-             << "\n手机号码：" << phone_number
+             << "\n手机号码：" << base64_decode(phone_number)
              << "\n民族：" << nation
              << "\n政治面貌：" << political_status
              << "\n学校名称：" << school_name << "\n"
@@ -265,13 +259,15 @@ void student::show(int choice)
 bool student::read(char key[], int choice)
 {
     student r;
-    fstream f("stu.dat", ios::in | ios::binary);
+    char ekey[20];
+    strcpy_s(ekey, base64_encode(key).c_str());
+    fstream f("stu.dat", ios::in | ios::out | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
         f.read((char *)&r, sizeof(student));
-    } while (strcmp(key, r.phone_number) && !endmark(r));
-    if (strcmp(key, r.phone_number))
+    } while (strcmp(ekey, r.phone_number) && !endmark(r));
+    if (strcmp(ekey, r.phone_number))
     {
         f.close();
         return 0; //没有重复
@@ -290,23 +286,23 @@ bool student::read(char key[], int choice)
             {
                 cout << "\n登录成功！" << endl;
                 //登录后读取用户信息
-                /* strcpy_s(id ,base64_decode(r.id).c_str());
-                student_number = base64_decode(r.student_number);
-                province = base64_decode(r.province);
-                nation = base64_decode(r.nation);
-                political_status = base64_decode(r.political_status);
-                school_name = base64_decode(r.school_name);
-                name = base64_decode(r.name);
-                password = pass;
-                phone_number = r.phone_number;
-                dad_name = base64_decode(r.dad_name);
-                dad_phone_number = base64_decode(r.dad_phone_number);
-                dad_job = base64_decode(r.dad_job);
-                dad_work_address = base64_decode(r.dad_work_address);
-                mom_name = base64_decode(r.mom_name);
-                mom_phone_number = base64_decode(r.mom_phone_number);
-                mom_job = base64_decode(r.mom_job);
-                mom_work_address = base64_decode(r.mom_work_address); */
+                strcpy_s(id, base64_decode(r.id).c_str());
+                strcpy_s(gender, base64_decode(r.gender).c_str());
+                strcpy_s(student_number, base64_decode(r.student_number).c_str());
+                strcpy_s(name, base64_decode(r.name).c_str());
+                strcpy_s(province, base64_decode(r.province).c_str());
+                strcpy_s(phone_number, ekey);
+                strcpy_s(nation, base64_decode(r.nation).c_str());
+                strcpy_s(political_status, base64_decode(r.political_status).c_str());
+                strcpy_s(school_name, base64_decode(r.school_name).c_str());
+                strcpy_s(dad_name, base64_decode(r.dad_name).c_str());
+                strcpy_s(dad_phone_number, base64_decode(r.dad_phone_number).c_str());
+                strcpy_s(dad_job, base64_decode(r.dad_job).c_str());
+                strcpy_s(dad_work_address, base64_decode(r.dad_work_address).c_str());
+                strcpy_s(mom_name, base64_decode(r.mom_name).c_str());
+                strcpy_s(mom_phone_number, base64_decode(r.mom_phone_number).c_str());
+                strcpy_s(mom_job, base64_decode(r.mom_job).c_str());
+                strcpy_s(mom_work_address, base64_decode(r.mom_work_address).c_str());
                 break;
             }
             cout << "\n密码错误，请重新输入：" << endl;
@@ -334,41 +330,54 @@ void student::write(int choice)
         f.seekp(-long(sizeof(student)), ios::cur);
         set_name();
         set_password();
-        set_basic_info();
         //用base64简单加密了一下
-        strcpy_s(w.name, base64_encode(name).c_str());
         strcpy_s(w.password, base64_encode(password).c_str());
-        strcpy_s(w.phone_number, phone_number);
+        strcpy_s(w.phone_number, base64_encode(phone_number).c_str());
+        strcpy_s(w.name, base64_encode(name).c_str());
+        f.write((char *)&w, sizeof(student));
+        f.write((char *)&mark, sizeof(student));
+        cout << "注册成功" << endl;
+        break;
+    }
+    case 1: //写个人基本信息
+    {
+        do
+        {
+            f.read((char *)&w, sizeof(student));
+        } while (strcmp(phone_number, w.phone_number));
         strcpy_s(w.province, base64_encode(province).c_str());
         strcpy_s(w.nation, base64_encode(nation).c_str());
         strcpy_s(w.political_status, base64_encode(political_status).c_str());
         strcpy_s(w.school_name, base64_encode(school_name).c_str());
         strcpy_s(w.student_number, base64_encode(student_number).c_str());
         strcpy_s(w.id, base64_encode(id).c_str());
+        strcpy_s(w.gender, base64_encode(gender).c_str());
+        //置写指针位置，设置错误会覆盖信息
+        f.seekp(-long(sizeof(student)), ios::cur);
         f.write((char *)&w, sizeof(student));
-        f.write((char *)&mark, sizeof(student));
-        cout << "注册成功" << endl;
         break;
     }
-    case 1: //写家长信息
+    case 2: //写家长信息
     {
         do
         {
             f.read((char *)&w, sizeof(student));
         } while (strcmp(phone_number, w.phone_number));
-        //置写指针位置，设置错误会覆盖信息
-        f.seekp(-long(sizeof(student)), ios::cur);
         strcpy_s(w.dad_name, base64_encode(dad_name).c_str());
         strcpy_s(w.dad_phone_number, base64_encode(dad_phone_number).c_str());
         strcpy_s(w.mom_name, base64_encode(mom_name).c_str());
         strcpy_s(w.mom_phone_number, base64_encode(mom_phone_number).c_str());
         strcpy_s(w.dad_work_address, base64_encode(dad_work_address).c_str());
         strcpy_s(w.mom_work_address, base64_encode(mom_work_address).c_str());
+        strcpy_s(w.dad_job, base64_encode(dad_job).c_str());
+        strcpy_s(w.mom_job, base64_encode(mom_job).c_str());
+        f.seekp(-long(sizeof(student)), ios::cur);
         f.write((char *)&w, sizeof(student));
-        cout << "家长信息写入成功" << endl;
         break;
     }
     default:
+        cout << "white（写错了）" << endl;
+        pause();
         break;
     }
     f.close();
