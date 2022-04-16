@@ -29,7 +29,7 @@ int main()
                 student stu;
                 if (stu.login())
                 {
-                    cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t0.退出登录" << endl;
+                    cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\t0.退出登录" << endl;
                     int select, flag = 1;
                     while (cin >> select)
                     {
@@ -46,10 +46,16 @@ int main()
                             stu.show(1);
                             stu.set_parents_info();
                             break;
+                        case 3:
+                            stu.set_experience();
+                            break;
+                        case 4:
+                            stu.set_score();
+                            break;
                         }
                         if (flag == 0)
                             break;
-                        cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t0.退出登录" << endl;
+                        cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\t0.退出登录" << endl;
                     }
                     cls();
                     cout << "已成功登出！" << endl;

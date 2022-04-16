@@ -18,6 +18,8 @@ class student : public user
     char mom_job[20]={};            //母亲职业
     char dad_work_address[50]={};   //父亲工作地址
     char mom_work_address[50]={};   //母亲工作地址
+    char experience[1005]={};       //中学经历
+    float score[9][13]={};          //成绩
 
 public:
     student() { authority = 1; }
@@ -25,12 +27,14 @@ public:
     bool login();
     void show(int);
     void set_basic_info();
+    void set_parents_info();
+    void set_experience();
+    void set_score();
     void set_province();
     void set_student_number();
     void set_nation();
     void set_political_status();
     void set_school_name();
-    void set_parents_info();
     bool read(char[], int);
     void write(int);
 };

@@ -152,7 +152,8 @@ void student::set_basic_info()
             set_id();
             break;
         case 7:
-            show(0);
+            show(1);
+            pause();
             break;
         case 0:
             cls();
@@ -208,7 +209,7 @@ void student::set_parents_info()
             cin >> mom_job;
             break;
         case 9:
-            show(1);
+            show(2);
             pause();
             break;
         case 0:
@@ -226,11 +227,113 @@ void student::set_parents_info()
     }
 }
 
+//有空用vector改改
+void student::set_experience()
+{
+    int choice;
+    cout << "\n请选择需要进行的操作：\n"
+         << "1.填写经历\t2.查看经历\t"
+         << "0.返回" << endl;
+    while (cin >> choice)
+    {
+        switch (choice)
+        {
+        case 1:
+        {
+            string experience;
+            cout << "\n请输入你的中学经历：（当最后一个字为#时结束输入）\n"
+                 << "格式如下：\n学校名称\t阶段\t入学时间-毕业/转校时间\t，担任职务/获得奖项\n"
+                 << "XXXX中学，初中/，20XX-20XX，班长，三好学生，学习之星\n"
+                 << "XXXX学校,高中，20XX-20XX，班长，三好学生，学习之星\n"
+                 << "请不要超过500字！！！" << endl;
+            cin.ignore();
+            getline(cin, experience, '#');
+            strcpy_s(this->experience, experience.c_str());
+            break;
+        }
+        case 2:
+            show(3);
+            pause();
+            break;
+        case 0:
+            cls();
+            cout << "输入完成！正在返回……" << endl;
+            write(3);
+            return;
+        default:
+            cout << "输入错误，请重新输入：" << endl;
+            break;
+        }
+        cout << "\n请选择需要进行的操作：\n"
+             << "1.填写经历\t2.查看经历\t"
+             << "0.返回" << endl;
+    }
+}
+
+void student::set_score()
+{
+    int select;
+    char *test[] = {"高一上期末考", "高一下期末考", "高二上期末考", "高二下期末考", "高三模拟考一（校级以上）", "高三模拟考二（校级以上）", "高三模拟考三（校级以上）", "学业水平考试", "高考"};
+    cout << "\n请选择需要进行的操作：\n"
+         << "1.填写成绩\t2.查看成绩\t"
+         << "0.返回" << endl;
+    while (cin >> select)
+    {
+        switch (select)
+        {
+        case 1:
+        {
+            int choice;
+            memset(score, 0, sizeof(score));
+            cout << "\n请选择需要填写的成绩：\n"
+                 << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
+                 << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
+            while (cin >> choice)
+            {
+                if (choice == 0)
+                {
+                    cls();
+                    break;
+                }
+                if (choice > 9)
+                {
+                    cout << "\n输入错误！请重新输入！" << endl;
+                    continue;
+                }
+                cout << "请按照顺序输入你的成绩，没有的请填0（150分制）：语文  数学  外语  物理  化学  生物  地理  政治  历史  技术  年级排名  年级总人数\n\n"
+                     << "请输入 " << test[choice - 1] << " 成绩：" << endl;
+                for (int i = 0; i < 12; i++)
+                {
+                    cin >> score[choice - 1][i];
+                    if (i < 10)
+                        score[choice - 1][12] += score[choice - 1][i]; //总分
+                }
+                cout << "\n请选择需要填写的成绩：\n"
+                     << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
+                     << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
+            }
+            break;
+        }
+        case 2:
+            show(4);
+            pause();
+            break;
+        case 0:
+            cls();
+            cout << "输入完成！正在返回……" << endl;
+            write(4);
+            return;
+        default:
+            cout << "输入错误，请重新输入：" << endl;
+        }
+    }
+}
+
 void student::show(int choice)
 {
     switch (choice)
     {
-    case 0:
+    case 1:
         cout << "\n姓名：" << name
              << "\n性别：" << gender
              << "\n学籍号：" << student_number
@@ -242,7 +345,7 @@ void student::show(int choice)
              << "\n学校名称：" << school_name << "\n"
              << endl;
         break;
-    case 1:
+    case 2:
         cout << "\n父亲姓名:" << dad_name
              << "\n父亲电话:" << dad_phone_number
              << "\n父亲职业:" << dad_job
@@ -252,6 +355,8 @@ void student::show(int choice)
              << "\n母亲职业:" << mom_job
              << "\n母亲工作地址:" << mom_work_address
              << endl;
+    case 3:
+    case 4:
         break;
     }
 }
@@ -319,14 +424,14 @@ void student::write(int choice)
     student w;
     fstream f("stu.dat", ios::in | ios::out | ios::binary);
     f.seekp(0, ios::beg);
+    do
+    {
+        f.read((char *)&w, sizeof(student));
+    } while (strcmp(phone_number, w.phone_number) && !endmark(w));
     switch (choice)
     {
     case 0: //注册
     {
-        do
-        {
-            f.read((char *)&w, sizeof(student));
-        } while (!endmark(w));
         f.seekp(-long(sizeof(student)), ios::cur);
         set_name();
         set_password();
@@ -341,10 +446,6 @@ void student::write(int choice)
     }
     case 1: //写个人基本信息
     {
-        do
-        {
-            f.read((char *)&w, sizeof(student));
-        } while (strcmp(phone_number, w.phone_number));
         strcpy_s(w.province, base64_encode(province).c_str());
         strcpy_s(w.nation, base64_encode(nation).c_str());
         strcpy_s(w.political_status, base64_encode(political_status).c_str());
@@ -359,10 +460,6 @@ void student::write(int choice)
     }
     case 2: //写家长信息
     {
-        do
-        {
-            f.read((char *)&w, sizeof(student));
-        } while (strcmp(phone_number, w.phone_number));
         strcpy_s(w.dad_name, base64_encode(dad_name).c_str());
         strcpy_s(w.dad_phone_number, base64_encode(dad_phone_number).c_str());
         strcpy_s(w.mom_name, base64_encode(mom_name).c_str());
@@ -371,6 +468,22 @@ void student::write(int choice)
         strcpy_s(w.mom_work_address, base64_encode(mom_work_address).c_str());
         strcpy_s(w.dad_job, base64_encode(dad_job).c_str());
         strcpy_s(w.mom_job, base64_encode(mom_job).c_str());
+        f.seekp(-long(sizeof(student)), ios::cur);
+        f.write((char *)&w, sizeof(student));
+        break;
+    }
+    case 3: //写个人经历
+    {
+        strcpy_s(w.experience, base64_encode(experience).c_str());
+        f.seekp(-long(sizeof(student)), ios::cur);
+        f.write((char *)&w, sizeof(student));
+        break;
+    }
+    case 4: //写成绩
+    {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 13; j++)
+                w.score[i][j] = score[i][j];
         f.seekp(-long(sizeof(student)), ios::cur);
         f.write((char *)&w, sizeof(student));
         break;

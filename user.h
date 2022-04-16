@@ -1,22 +1,22 @@
 #ifndef USER_H
 #define USER_H
 
-#include"control.h"
+#include "control.h"
 #include <iostream>
 #include <string>
 
 class user
 {
 protected:
-    char phone_number[20]={"nophone"};
-    char name[50]={};
-    char id[25]={};
-    char password[20]={};
-    char gender[5]={}; //性别
-    int authority=0;
+    char phone_number[20] = {"nophone"};
+    char name[50] = {};
+    char id[25] = {};
+    char password[20] = {};
+    char gender[5] = {}; //性别
+    int authority = 0;
 
 public:
-    user(){}
+    user() {}
     virtual void signup() = 0;
     // virtual void login();
     virtual void show(int) = 0;
