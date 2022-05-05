@@ -12,7 +12,7 @@ int main()
         int choice;
         cls();
         cout << "欢迎使用管理系统！\n"
-             << "1.学生注册\t2.管理注册\t3.学生登录\t4.退出\t9.学生初始化\t0.管理初始化" << endl;
+             << "1.学生注册\t2.管理注册\t3.学生登录\t5.找回密码(学生)\t8.学生初始化\t9.管理初始化\t0.退出" << endl;
         cin >> choice;
         switch (choice)
         {
@@ -21,7 +21,10 @@ int main()
             {
                 student stu;
                 stu.signup();
-                cout << "返回菜单ing" << endl;
+                cout << endl;
+                pause();
+                cout << "\n返回菜单ing" << endl;
+                sleep();
                 break;
             }
             case 3:
@@ -29,46 +32,60 @@ int main()
                 student stu;
                 if (stu.login())
                 {
-                    cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\t0.退出登录" << endl;
-                    int select, flag = 1;
-                    while (cin >> select)
+                    while (1)
                     {
+                        cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\n5.设置密保问题\t0.退出登录" << endl;
+                        int select, flag = 1;
+                        cin >> select;
                         switch (select)
                         {
                         case 0:
                             flag = 0;
                             break;
                         case 1:
-                            stu.show(0);
+                            stu.show(1);
                             stu.set_basic_info();
                             break;
                         case 2:
-                            stu.show(1);
+                            stu.show(2);
                             stu.set_parents_info();
                             break;
                         case 3:
+                            stu.show(3);
                             stu.set_experience();
                             break;
                         case 4:
+                            stu.show(4);
                             stu.set_score();
+                            break;
+                        case 5:
+                            stu.set_security_question();
                             break;
                         }
                         if (flag == 0)
                             break;
-                        cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\t0.退出登录" << endl;
                     }
                     cls();
                     cout << "已成功登出！" << endl;
                 }
-                cout << "返回菜单ing" << endl;
+                cout << "\n返回菜单ing" << endl;
                 sleep();
                 cls();
                 break;
             }
-            case 4:
-                cout << "退出ing" << endl;
+            case 5:
+            {
+                student stu;
+                stu.rechieve_password();
+                pause();
+                break;
+            }
+            case 0:
+                cls();
+                cout << "欢迎再次使用:D" << endl;
+                sleep();
                 exit(0);
-            case 9:
+            case 8:
                 cout << "初始化ing" << endl;
                 stu_init();
                 cls();
@@ -87,4 +104,5 @@ void stu_init()
     outfile.write((char *)&mark, sizeof(student));
     cout << "初始化完成" << endl;
     outfile.close();
+    pause();
 }

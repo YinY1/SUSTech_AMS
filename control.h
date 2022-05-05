@@ -1,8 +1,8 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include<windows.h>
-
+#include <iomanip>
+#include <windows.h>
 inline void cls()
 {
     system("cls");
@@ -13,7 +13,7 @@ inline void pause()
 }
 inline void sleep()
 {
-   Sleep(500);
+    Sleep(500);
 }
 
 #endif

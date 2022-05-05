@@ -19,9 +19,9 @@ void user::set_name()
 {
     string name;
     cout << "请输入姓名：" << endl;
-    while(cin >> name)
+    while (cin >> name)
     {
-        if(name.length()<45)
+        if (name.length() < 45)
         {
             strcpy_s(this->name, name.c_str());
             break;

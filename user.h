@@ -23,9 +23,9 @@ public:
     virtual bool read(char[], int) = 0;
     virtual void write(int) = 0;
     void set_password();
-    std::string set_phone_number();
     void set_id();
     void set_name();
+    std::string set_phone_number();
     std::string get_phone()
     {
         return phone_number;

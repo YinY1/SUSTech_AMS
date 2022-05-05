@@ -2,7 +2,7 @@
 #include "base64.h"
 #include "check.h"
 
-//后包含windows.h会导致byte重定义,命名空间std会被重复包含https://github.com/msys2/MINGW-packages/issues/7035
+//包含windows.h前使用std会导致byte重定义https://github.com/msys2/MINGW-packages/issues/7035
 //所以不要在头文件using,实在不想打std::可以在cpp里面using，尽量不要using namespace，除非确定没有重复。
 using namespace std;
 
@@ -23,25 +23,34 @@ void student::signup()
     }
 }
 
-bool student::login()
+int student::input_phone_number(int read_flag)
 {
     char key[15];
     cout << "请输入手机号：\t 输入0返回" << endl;
-    while (cin >> key)
+    cin>>key;
+    if (key[0] == '0')
+        return 0;
+    if (read(key, read_flag))
+        return 1;
+    return -1;
+}
+
+bool student::login()
+{
+    while (1)
     {
-        if (key[0] == '0')
+        switch (input_phone_number(1))
         {
+        case 0:
             return 0;
-        }
-        if (read(key, 1))
+        case 1:
         {
             sleep();
             cls();
             cout << "欢迎" << name << endl;
             return 1;
         }
-        else
-        {
+        case -1:
             cout << "用户不存在！请重新输入账号！\t输入0返回" << endl;
         }
     }
@@ -227,12 +236,12 @@ void student::set_parents_info()
     }
 }
 
-//有空用vector改改
 void student::set_experience()
 {
     int choice;
+    const char *c[] = {"\n请输入你的中学经历：（回车结束输入，用空格隔开不同的项目）\n", "格式如下：\n学校名称\t阶段\t入学时间-毕业/转校时间\t，担任职务/获得奖项\n", "XXXX中学，初中/，20XX-20XX，班长，三好学生，学习之星\n", "XXXX学校,高中，20XX-20XX，班长，三好学生，学习之星\n", "请不要超过500字！！！\n"};
     cout << "\n请选择需要进行的操作：\n"
-         << "1.填写经历\t2.查看经历\t"
+         << "1.填写/修改经历\t2.查看经历\t3.删除经历\t"
          << "0.返回" << endl;
     while (cin >> choice)
     {
@@ -240,40 +249,198 @@ void student::set_experience()
         {
         case 1:
         {
-            string experience;
-            cout << "\n请输入你的中学经历：（当最后一个字为#时结束输入）\n"
-                 << "格式如下：\n学校名称\t阶段\t入学时间-毕业/转校时间\t，担任职务/获得奖项\n"
-                 << "XXXX中学，初中/，20XX-20XX，班长，三好学生，学习之星\n"
-                 << "XXXX学校,高中，20XX-20XX，班长，三好学生，学习之星\n"
-                 << "请不要超过500字！！！" << endl;
+            int size = 0;
+            string s;
+            for (int i = 0; i < 6; i++)
+                if (experience[i][0] != '\0')
+                    size++;
             cin.ignore();
-            getline(cin, experience, '#');
-            strcpy_s(this->experience, experience.c_str());
+            while (1)
+            {
+                cls();
+                if (size == 6)
+                {
+                    cout << "已输入六项经历！" << endl;
+                    pause();
+                    break;
+                }
+                cout << *c << "\n**目前已输入条目数量：" << size << endl;
+                cin.ignore(100, '\n');
+                getline(cin, s);
+                if (s == "0")
+                {
+                    cls();
+                    break;
+                }
+                if (s.size() > 500)
+                    cout << "\n*****输入长度超过500字,请减小长度后再试!*****\n"
+                         << endl;
+                else
+                    strcpy_s(experience[size++], s.c_str());
+                pause();
+            }
             break;
         }
         case 2:
             show(3);
             pause();
             break;
+        case 3:
+            while (1)
+            {
+                cls();
+                show(3);
+                cout << "请输入需要操作的序号（输入0退出）：" << endl;
+                int index, select;
+                cin >> index;
+                if (index == 0)
+                    break;
+                if (index > 6 || index < 1)
+                {
+                    cout << "输入错误！请重新输入！" << endl;
+                    pause();
+                }
+                else
+                {
+                    cout << "\n删除请输入1，修改请输入2：" << endl;
+                    cin >> select;
+                    if (select == 1)
+                        strcpy_s(experience[index - 1], "");
+                    else if (select == 2)
+                    {
+                        cls();
+                        cout << "请输入新的经历:\n"
+                             << c << endl;
+                        string s;
+                        cin.ignore();
+                        getline(cin, s);
+                        strcpy_s(experience[index - 1], s.c_str());
+                    }
+                    else
+                    {
+                        cout << "\n*****输入错误！请重新输入!*****\n"
+                             << endl;
+                        pause();
+                    }
+                    pause();
+                }
+            }
+            break;
         case 0:
             cls();
             cout << "输入完成！正在返回……" << endl;
             write(3);
+            sleep();
             return;
         default:
-            cout << "输入错误，请重新输入：" << endl;
+            cout << "\n输入错误，请重新输入：" << endl;
             break;
         }
         cout << "\n请选择需要进行的操作：\n"
-             << "1.填写经历\t2.查看经历\t"
+             << "1.填写经历\t2.查看经历\t3.删除/修改经历\t"
              << "0.返回" << endl;
     }
 }
 
+void student::set_security_question()
+{
+    string s;
+    if(base64_decode("empty")==security_question)
+        cout<<"还未设置密保问题！"<<endl;
+    else
+        cout << "当前密保问题为:\n"
+             << security_question << endl;
+    cout<< "\n请输入你想设置的密保问题(25汉字/50英文字符以内)：\n\n输入0返回" << endl;
+    while (1)
+    {
+        cin >> s;
+        if (s == "0")
+        {
+            cls();
+            return;
+        }
+        if (s.length() < 50)
+        {
+            strcpy_s(this->security_question, s.c_str());
+            break;
+        }
+        else
+            cout << "密保问题过长，请重新输入：" << endl;
+    }
+    cout << "\n请输入你想设置的密保答案(10汉字/20英文字符以内)：\n\n输入0返回" << endl;
+    while (1)
+    {
+        cin >> s;
+        if (s == "0")
+        {
+            cls();
+            return;
+        }
+        if (s.length() < 20)
+        {
+            strcpy_s(this->security_answer, s.c_str());
+            break;
+        }
+        else
+            cout << "密保答案过长，请重新输入：" << endl;
+    }
+    cls();
+    cout << "\n设置完成！您的密保为：\n"
+         << "\n问题：\t" << security_question << "\n"
+         << "\n答案：\t" << security_answer << endl;
+    write(9);
+    pause();
+}
+
+void student::rechieve_password()
+{
+    cls();
+    int flag = 0;
+    while (!flag)
+    {
+        int p = input_phone_number(3);
+        switch (p)
+        {
+        case -1:
+            cls();
+            cout << "用户不存在！" << endl;
+            break;
+        case 0:
+            cls();
+            return;
+        case 1:
+            flag = 1;
+        }
+    }
+    string ans;
+    if (strcmp(security_question,"empty") == 0)
+    {
+        cout << "您没有设置密保！" << endl;
+        pause();
+        cls();
+        return;
+    }
+    cout << "\n请回答以下问题：\n"<<base64_decode(security_question)<< endl;
+    cout << "\n请输入密保答案：\n" << endl;
+    while (cin >> ans)
+    {
+        if (ans == base64_decode(security_answer))
+        {
+            cout<<"\n答案正确！下面将进行密码重置！\n"<<endl;
+            set_password();
+            break;
+        }
+        else
+            cout << "密保答案错误，请重新输入：" << endl;
+    }
+    cout<<"\n密码修改成功！"<<endl;
+}
+
+//暂时不弄美观
 void student::set_score()
 {
     int select;
-    char *test[] = {"高一上期末考", "高一下期末考", "高二上期末考", "高二下期末考", "高三模拟考一（校级以上）", "高三模拟考二（校级以上）", "高三模拟考三（校级以上）", "学业水平考试", "高考"};
+    const char *test[] = {"高一上期末考", "高一下期末考", "高二上期末考", "高二下期末考", "高三模拟考一（校级以上）", "高三模拟考二（校级以上）", "高三模拟考三（校级以上）", "学业水平考试", "高考"};
     cout << "\n请选择需要进行的操作：\n"
          << "1.填写成绩\t2.查看成绩\t"
          << "0.返回" << endl;
@@ -320,12 +487,14 @@ void student::set_score()
             break;
         case 0:
             cls();
-            cout << "输入完成！正在返回……" << endl;
             write(4);
             return;
         default:
             cout << "输入错误，请重新输入：" << endl;
         }
+        cout << "\n请选择需要进行的操作：\n"
+             << "1.填写成绩\t2.查看成绩\t"
+             << "0.返回" << endl;
     }
 }
 
@@ -356,7 +525,18 @@ void student::show(int choice)
              << "\n母亲工作地址:" << mom_work_address
              << endl;
     case 3:
+        cout << "个人经历：" << endl;
+        for (int i = 0; i < 6; i++)
+            cout << i + 1 << ". " << experience[i] << endl;
+        break;
     case 4:
+        cout << setiosflags(ios::left) << setw(10) << "语文" << setw(10) << "数学" << setw(10) << "外语" << setw(10) << "物理" << setw(10) << "化学" << setw(10) << "生物" << setw(10) << "地理" << setw(10) << "政治" << setw(10) << "历史" << setw(10) << "技术" << setw(10) << "年级排名" << setw(10) << "年级总人数" << setw(10) << "总分" << endl;
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 13; j++)
+                cout << setw(10) << score[i][j];
+            cout << endl;
+        }
         break;
     }
 }
@@ -390,30 +570,24 @@ bool student::read(char key[], int choice)
             if (strcmp(base64_encode(pass).c_str(), r.password) == 0)
             {
                 cout << "\n登录成功！" << endl;
-                //登录后读取用户信息
-                strcpy_s(id, base64_decode(r.id).c_str());
-                strcpy_s(gender, base64_decode(r.gender).c_str());
-                strcpy_s(student_number, base64_decode(r.student_number).c_str());
-                strcpy_s(name, base64_decode(r.name).c_str());
-                strcpy_s(province, base64_decode(r.province).c_str());
+                *this = r; //读取信息
                 strcpy_s(phone_number, ekey);
-                strcpy_s(nation, base64_decode(r.nation).c_str());
-                strcpy_s(political_status, base64_decode(r.political_status).c_str());
-                strcpy_s(school_name, base64_decode(r.school_name).c_str());
-                strcpy_s(dad_name, base64_decode(r.dad_name).c_str());
-                strcpy_s(dad_phone_number, base64_decode(r.dad_phone_number).c_str());
-                strcpy_s(dad_job, base64_decode(r.dad_job).c_str());
-                strcpy_s(dad_work_address, base64_decode(r.dad_work_address).c_str());
-                strcpy_s(mom_name, base64_decode(r.mom_name).c_str());
-                strcpy_s(mom_phone_number, base64_decode(r.mom_phone_number).c_str());
-                strcpy_s(mom_job, base64_decode(r.mom_job).c_str());
-                strcpy_s(mom_work_address, base64_decode(r.mom_work_address).c_str());
                 break;
             }
             cout << "\n密码错误，请重新输入：" << endl;
         }
         break;
     }
+    case 3: //用作查询密保
+    {
+        strcpy_s(security_question, r.security_question);
+        strcpy_s(security_answer, r.security_answer);
+        break;
+    }
+    default:
+        cout << "read(错了)" << endl;
+        pause();
+        break;
     }
     f.close();
     return 1;
@@ -474,7 +648,8 @@ void student::write(int choice)
     }
     case 3: //写个人经历
     {
-        strcpy_s(w.experience, base64_encode(experience).c_str());
+        for (int i = 0; i < 6; i++)
+            strcpy_s(w.experience[i], base64_encode(experience[i]).c_str());
         f.seekp(-long(sizeof(student)), ios::cur);
         f.write((char *)&w, sizeof(student));
         break;
@@ -488,12 +663,55 @@ void student::write(int choice)
         f.write((char *)&w, sizeof(student));
         break;
     }
+    case 9: //写密保
+    {
+        strcpy_s(w.security_question, base64_encode(security_question).c_str());
+        strcpy_s(w.security_answer, base64_encode(security_answer).c_str());
+        f.seekp(-long(sizeof(student)), ios::cur);
+        f.write((char *)&w, sizeof(student));
+        break;
+    }
     default:
         cout << "white（写错了）" << endl;
         pause();
         break;
     }
     f.close();
+}
+
+//重载 = 来读取个人信息
+student &student::operator=(const student &r)
+{
+    //登录后读取用户个人信息
+    strcpy_s(id, base64_decode(r.id).c_str());
+    strcpy_s(gender, base64_decode(r.gender).c_str());
+    strcpy_s(student_number, base64_decode(r.student_number).c_str());
+    strcpy_s(name, base64_decode(r.name).c_str());
+    strcpy_s(province, base64_decode(r.province).c_str());
+    strcpy_s(nation, base64_decode(r.nation).c_str());
+    strcpy_s(political_status, base64_decode(r.political_status).c_str());
+    strcpy_s(school_name, base64_decode(r.school_name).c_str());
+    strcpy_s(security_question, base64_decode(r.security_question).c_str());
+    strcpy_s(security_answer, base64_decode(r.security_answer).c_str());
+    //读取家长信息
+    strcpy_s(dad_name, base64_decode(r.dad_name).c_str());
+    strcpy_s(dad_phone_number, base64_decode(r.dad_phone_number).c_str());
+    strcpy_s(dad_job, base64_decode(r.dad_job).c_str());
+    strcpy_s(dad_work_address, base64_decode(r.dad_work_address).c_str());
+    strcpy_s(mom_name, base64_decode(r.mom_name).c_str());
+    strcpy_s(mom_phone_number, base64_decode(r.mom_phone_number).c_str());
+    strcpy_s(mom_job, base64_decode(r.mom_job).c_str());
+    strcpy_s(mom_work_address, base64_decode(r.mom_work_address).c_str());
+    //读取个人经历
+    for (int i = 0; i < 6; i++)
+        strcpy_s(experience[i], base64_decode(r.experience[i]).c_str());
+    //读取成绩
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 13; j++)
+            score[i][j] = r.score[i][j];
+    }
+    return *this;
 }
 
 bool endmark(student s)
