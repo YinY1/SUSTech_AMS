@@ -1,10 +1,6 @@
 #ifndef USER_H
 #define USER_H
-
-#include "control.h"
-#include <iostream>
-#include <string>
-
+#include<string>
 class user
 {
 protected:

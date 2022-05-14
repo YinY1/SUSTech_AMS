@@ -1,5 +1,8 @@
 #include"check.h"
+#include <iostream>
+
 using namespace std;
+
 bool id_check(string id)
 {
     if (id.length() != 18)

@@ -1,4 +1,5 @@
 #include "base64.h"
+#include <cstring>
 using namespace std;
 //https://zhuanlan.zhihu.com/p/103336186
 //https://github.com/ReneNyffenegger/cpp-base64
@@ -24,7 +25,6 @@ string base64_encode(const string &bytes_to_encode)
             i = 0;
         }
     }
-
     if (i)
     {
         for (j = i; j < 3; j++)
@@ -40,7 +40,6 @@ string base64_encode(const string &bytes_to_encode)
         while ((i++ < 3))       //如果最后一组不足3个字符，则补充'='以确保能构成4*6=24个bit的组
             ret += '=';
     }
-
     return ret;
 }
 
@@ -52,7 +51,6 @@ string base64_decode(const char encoded_string[])
     int in_ = 0;
     unsigned char char_array_4[4], char_array_3[3];
     string ret;
-
     while (in_len-- && (encoded_string[in_] != '=') && is_base64(encoded_string[in_]))
     {
         char_array_4[i++] = encoded_string[in_];
@@ -71,7 +69,6 @@ string base64_decode(const char encoded_string[])
             i = 0;
         }
     }
-
     if (i)
     {
         for (j = 0; j < i; j++)
@@ -83,6 +80,5 @@ string base64_decode(const char encoded_string[])
         for (j = 0; (j < i - 1); j++)
             ret += char_array_3[j];
     }
-
     return ret;
 }

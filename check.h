@@ -1,8 +1,6 @@
 #ifndef CHECK_H
 #define CHECK_H
-
-#include <iostream>
-
+#include <string>
 bool id_check(std::string id);
 bool password_check(std::string password);
 bool province_check(std::string province);

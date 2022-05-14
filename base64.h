@@ -1,7 +1,7 @@
 #ifndef BASE64_H
 #define BASE64_H
+
 #include <string>
-#include <cstring>
 
 //base64编码表
 static const std::string base64_chars =

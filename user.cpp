@@ -1,5 +1,10 @@
 #include "user.h"
 #include "check.h"
+#include "control.h"
+#include "base64.h"
+#include <iostream>
+
+
 using namespace std;
 
 string user::set_phone_number()

@@ -1,7 +1,10 @@
 #include "student.h"
 #include "base64.h"
 #include "check.h"
-
+#include "control.h"
+#include <fstream>
+#include <iostream>
+#include <string>
 //包含windows.h前使用std会导致byte重定义https://github.com/msys2/MINGW-packages/issues/7035
 //所以不要在头文件using,实在不想打std::可以在cpp里面using，尽量不要using namespace，除非确定没有重复。
 using namespace std;
@@ -27,11 +30,14 @@ int student::input_phone_number(int read_flag)
 {
     char key[15];
     cout << "请输入手机号：\t 输入0返回" << endl;
-    cin>>key;
+    cin >> key;
     if (key[0] == '0')
         return 0;
     if (read(key, read_flag))
+    {
+
         return 1;
+    }
     return -1;
 }
 
@@ -345,12 +351,12 @@ void student::set_experience()
 void student::set_security_question()
 {
     string s;
-    if(base64_decode("empty")==security_question)
-        cout<<"还未设置密保问题！"<<endl;
+    if (base64_decode("empty") == security_question)
+        cout << "还未设置密保问题！" << endl;
     else
         cout << "当前密保问题为:\n"
              << security_question << endl;
-    cout<< "\n请输入你想设置的密保问题(25汉字/50英文字符以内)：\n\n输入0返回" << endl;
+    cout << "\n请输入你想设置的密保问题(25汉字/50英文字符以内)：\n\n输入0返回" << endl;
     while (1)
     {
         cin >> s;
@@ -395,8 +401,8 @@ void student::set_security_question()
 void student::rechieve_password()
 {
     cls();
-    int flag = 0;
-    while (!flag)
+    int flag = 1;
+    while (flag)
     {
         int p = input_phone_number(3);
         switch (p)
@@ -409,31 +415,35 @@ void student::rechieve_password()
             cls();
             return;
         case 1:
-            flag = 1;
+            flag = 0;
         }
     }
     string ans;
-    if (strcmp(security_question,"empty") == 0)
+    if (strcmp(security_question, "empty") == 0)
     {
         cout << "您没有设置密保！" << endl;
         pause();
         cls();
         return;
     }
-    cout << "\n请回答以下问题：\n"<<base64_decode(security_question)<< endl;
-    cout << "\n请输入密保答案：\n" << endl;
+    cout << "\n请回答以下问题：\n"
+         << base64_decode(security_question) << endl;
+    cout << "\n请输入密保答案：\n"
+         << endl;
     while (cin >> ans)
     {
         if (ans == base64_decode(security_answer))
         {
-            cout<<"\n答案正确！下面将进行密码重置！\n"<<endl;
+            cout << "\n答案正确！下面将进行密码重置！\n"
+                 << endl;
             set_password();
             break;
         }
         else
             cout << "密保答案错误，请重新输入：" << endl;
     }
-    cout<<"\n密码修改成功！"<<endl;
+    cout << "\n密码修改成功！" << endl;
+    write(5);
 }
 
 //暂时不弄美观
@@ -582,6 +592,7 @@ bool student::read(char key[], int choice)
     {
         strcpy_s(security_question, r.security_question);
         strcpy_s(security_answer, r.security_answer);
+        strcpy_s(phone_number, ekey);
         break;
     }
     default:
@@ -663,6 +674,20 @@ void student::write(int choice)
         f.write((char *)&w, sizeof(student));
         break;
     }
+    case 5: //写密码
+    {
+        strcpy_s(w.password, base64_encode(password).c_str());
+        f.seekp(-long(sizeof(student)), ios::cur);
+        f.write((char *)&w, sizeof(student));
+        break;
+    }
+    case 8: //写空白信息
+    {
+        student empty;
+        f.seekp(-long(sizeof(student)), ios::cur);
+        f.write((char *)&empty, sizeof(student));
+        break;
+    }
     case 9: //写密保
     {
         strcpy_s(w.security_question, base64_encode(security_question).c_str());
@@ -679,10 +704,90 @@ void student::write(int choice)
     f.close();
 }
 
+bool student::confirm_password()
+{
+    string pass1, pass2;
+    cout << "\n请输入密码！输入0返回" << endl;
+    while (cin >> pass1)
+    {
+        if (pass1 == "0")
+        {
+            cout << "\n已取消\n"
+                 << endl;
+            cls();
+            return 0;
+        }
+        string s = base64_decode(password);
+        if (pass1 == s)
+        {
+            cout << "\n请再次输入密码确认！输入0返回" << endl;
+            cin >> pass2;
+            if (pass2 == "0")
+            {
+                cout << "\n已取消\n"
+                     << endl;
+                cls();
+                return 0;
+            }
+            if (pass1 == pass2)
+                return 1;
+        }
+        else
+            cout << "\n密码错误！请重新输入！输入0返回" << endl;
+    }
+    return 0;
+}
+
+bool student::change_password()
+{
+    cls();
+    if (confirm_password())
+    {
+        while (1)
+        {
+            cout << "\n请输入新密码：" << endl;
+            string pass;
+            cin >> pass;
+            if (password_check(pass))
+            {
+                strcpy_s(password, pass.c_str());
+                cout << "\n密码修改成功！请重新登录！" << endl;
+                write(5);
+                pause();
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+bool student::cancel_account()
+{
+    cout << "确定要注销账号吗？"
+         << "\n\n1.确定；其他.取消" << endl;
+    int choice;
+    cin >> choice;
+    if (choice == 1)
+    {
+        if (confirm_password())
+        {
+            cout << "\n注销账号成功" << endl;
+            write(8);
+            pause();
+            return 1;
+        }
+    }
+    cout << "\n已取消" << endl;
+    pause();
+    cls();
+    return 0;
+}
+
 //重载 = 来读取个人信息
 student &student::operator=(const student &r)
 {
     //登录后读取用户个人信息
+    strcpy_s(password, r.password); //不解码提高安全性
     strcpy_s(id, base64_decode(r.id).c_str());
     strcpy_s(gender, base64_decode(r.gender).c_str());
     strcpy_s(student_number, base64_decode(r.student_number).c_str());
