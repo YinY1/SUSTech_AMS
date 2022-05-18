@@ -77,3 +77,14 @@ bool nation_check(string nation)
     cout<<"请输入正确的民族！"<<endl;
     return 0;
 }
+
+bool college_check(string college)
+{
+    //学院
+    const char *p[] = {"理学院", "工学院","医学院","商学院","人文社科学院","生命科学学院","设计学院"};
+    for (int i = 0; i < 7; i++)
+        if (college == p[i])
+            return 1;
+    cout << "请输入正确的学院！" << endl;
+    return 0;
+}

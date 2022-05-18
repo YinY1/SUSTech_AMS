@@ -1,30 +1,33 @@
 #ifndef USER_H
 #define USER_H
-#include<string>
+
+#include <string>
+#include <cstring>
 class user
 {
 protected:
+    char province[10] = {};
     char phone_number[20] = {"nophone"};
     char name[50] = {};
     char id[25] = {};
     char password[20] = {};
-    char gender[5] = {}; //性别
-    int authority = 0;
 
 public:
     user() {}
-    virtual void signup() = 0;
-    // virtual void login();
-    virtual void show(int) = 0;
-    virtual bool read(char[], int) = 0;
-    virtual void write(int) = 0;
+    virtual bool login() = 0;
     void set_password();
-    void set_id();
     void set_name();
+    void set_province();
+    std::string set_college();
     std::string set_phone_number();
-    std::string get_phone()
+    std::string get_phone();
+    std::string get_name();
+    std::string get_id();
+    std::string get_province();
+    template <typename T>
+    bool endmark(T &s)
     {
-        return phone_number;
+        return strcmp((s.get_phone()).c_str(), "nophone") == 0;
     }
 };
 

@@ -4,7 +4,6 @@
 #include "control.h"
 #include <fstream>
 #include <iostream>
-#include <string>
 //包含windows.h前使用std会导致byte重定义https://github.com/msys2/MINGW-packages/issues/7035
 //所以不要在头文件using,实在不想打std::可以在cpp里面using，尽量不要using namespace，除非确定没有重复。
 using namespace std;
@@ -35,7 +34,6 @@ int student::input_phone_number(int read_flag)
         return 0;
     if (read(key, read_flag))
     {
-
         return 1;
     }
     return -1;
@@ -63,17 +61,21 @@ bool student::login()
     return 0;
 }
 
-void student::set_province()
+void student::set_id()
 {
-    string province;
+    string id;
     bool check = 0;
-    cout << "请输入高考省份（地区）：" << endl;
+    cout << "请输入身份证号码：" << endl;
     while (!check)
     {
-        cin >> province;
-        check = province_check(province); //判断省份是否合法
+        cin >> id;
+        check = id_check(id); //判断身份证号码是否合法
     }
-    strcpy_s(this->province, province.c_str());
+    strcpy_s(this->id, id.c_str());
+    if (id[17] % 2) //判断性别,身份证第17位为奇数为男，偶数为女
+        strcpy_s(this->gender, "男");
+    else
+        strcpy_s(this->gender, "女");
 }
 
 void student::set_student_number()
@@ -260,7 +262,7 @@ void student::set_experience()
             for (int i = 0; i < 6; i++)
                 if (experience[i][0] != '\0')
                     size++;
-            cin.ignore();
+            cin.ignore(100, '\n');
             while (1)
             {
                 cls();
@@ -271,7 +273,6 @@ void student::set_experience()
                     break;
                 }
                 cout << *c << "\n**目前已输入条目数量：" << size << endl;
-                cin.ignore(100, '\n');
                 getline(cin, s);
                 if (s == "0")
                 {
@@ -477,7 +478,8 @@ void student::set_score()
                     cout << "\n输入错误！请重新输入！" << endl;
                     continue;
                 }
-                cout << "请按照顺序输入你的成绩，没有的请填0（150分制）：语文  数学  外语  物理  化学  生物  地理  政治  历史  技术  年级排名  年级总人数\n\n"
+                cout << "请按照顺序输入你的成绩，没有的请填0（150分制）：\n"
+                     << "语文  数学  外语  物理  化学  生物  地理  政治  历史  技术  年级排名  年级总人数\n\n"
                      << "请输入 " << test[choice - 1] << " 成绩：" << endl;
                 for (int i = 0; i < 12; i++)
                 {
@@ -534,6 +536,7 @@ void student::show(int choice)
              << "\n母亲职业:" << mom_job
              << "\n母亲工作地址:" << mom_work_address
              << endl;
+        break;
     case 3:
         cout << "个人经历：" << endl;
         for (int i = 0; i < 6; i++)
@@ -556,7 +559,7 @@ bool student::read(char key[], int choice)
     student r;
     char ekey[20];
     strcpy_s(ekey, base64_encode(key).c_str());
-    fstream f("stu.dat", ios::in | ios::out | ios::binary);
+    fstream f("stu.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
@@ -580,8 +583,7 @@ bool student::read(char key[], int choice)
             if (strcmp(base64_encode(pass).c_str(), r.password) == 0)
             {
                 cout << "\n登录成功！" << endl;
-                *this = r; //读取信息
-                strcpy_s(phone_number, ekey);
+                this->cpy_info(r); //读取信息
                 break;
             }
             cout << "\n密码错误，请重新输入：" << endl;
@@ -595,7 +597,7 @@ bool student::read(char key[], int choice)
         strcpy_s(phone_number, ekey);
         break;
     }
-    default:
+    default://调试用，防止写错了没发现
         cout << "read(错了)" << endl;
         pause();
         break;
@@ -783,12 +785,14 @@ bool student::cancel_account()
     return 0;
 }
 
-//重载 = 来读取个人信息
-student &student::operator=(const student &r)
+//重载 = 来读取个人信息 sort会调用=，而=进行了base64，会导致反复解码
+//所以不能重载=进行额外操作,没事干别瞎重载，要重载也只是单纯复制不要搞别的操作
+void student::cpy_info(const student &r)
 {
     //登录后读取用户个人信息
     strcpy_s(password, r.password); //不解码提高安全性
     strcpy_s(id, base64_decode(r.id).c_str());
+    strcpy_s(phone_number, r.phone_number);
     strcpy_s(gender, base64_decode(r.gender).c_str());
     strcpy_s(student_number, base64_decode(r.student_number).c_str());
     strcpy_s(name, base64_decode(r.name).c_str());
@@ -798,6 +802,7 @@ student &student::operator=(const student &r)
     strcpy_s(school_name, base64_decode(r.school_name).c_str());
     strcpy_s(security_question, base64_decode(r.security_question).c_str());
     strcpy_s(security_answer, base64_decode(r.security_answer).c_str());
+    is_admitted = r.is_admitted;
     //读取家长信息
     strcpy_s(dad_name, base64_decode(r.dad_name).c_str());
     strcpy_s(dad_phone_number, base64_decode(r.dad_phone_number).c_str());
@@ -816,10 +821,4 @@ student &student::operator=(const student &r)
         for (int j = 0; j < 13; j++)
             score[i][j] = r.score[i][j];
     }
-    return *this;
-}
-
-bool endmark(student s)
-{
-    return strcmp((s.get_phone()).c_str(), "nophone") == 0;
 }

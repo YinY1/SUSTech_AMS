@@ -1,10 +1,8 @@
 #include "user.h"
+#include "base64.h"
 #include "check.h"
 #include "control.h"
-#include "base64.h"
 #include <iostream>
-
-
 using namespace std;
 
 string user::set_phone_number()
@@ -52,20 +50,52 @@ void user::set_password()
     strcpy_s(this->password, password.c_str());
 }
 
-void user::set_id()
+void user::set_province()
 {
-
-    string id;
+    string province;
     bool check = 0;
-    cout << "请输入身份证号码：" << endl;
+    cout << "请输入省份（地区）：" << endl;
     while (!check)
     {
-        cin >> id;
-        check = id_check(id); //判断身份证号码是否合法
+        cin >> province;
+        check = province_check(province); //判断省份是否合法
     }
-    strcpy_s(this->id, id.c_str());
-    if (id[17] % 2) //判断性别,身份证第17位为奇数为男，偶数为女
-        strcpy_s(this->gender, "男");
-    else
-        strcpy_s(this->gender, "女");
+    strcpy_s(this->province, province.c_str());
 }
+
+string user::set_college()
+{
+    string college;
+    bool check = 0;
+    cout << "请输入学院：" << endl;
+    while (!check)
+    {
+        cin >> college;
+        if (college == "0")
+            break;
+        check = college_check(college); //判断学院是否合法
+    }
+    return college;
+}
+
+string user::get_phone()
+{
+    return phone_number;
+}
+
+string user::get_name()
+{
+    return name;
+}
+
+string user::get_id()
+{
+    return id;
+}
+
+string user::get_province()
+{
+    return province;
+}
+
+//
