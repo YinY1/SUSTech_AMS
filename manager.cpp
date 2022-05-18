@@ -6,10 +6,10 @@ using namespace std;
 
 void manager::set_ukey()
 {
-    char ukey[20];
+    char key[20];
     cout << "请输入操作密码：";
-    cin >> ukey;
-    strcmp(this->ukey, base64_encode(ukey).c_str());
+    cin >> key;
+    strcpy_s(ukey, key);
 }
 
 bool manager::ukey_check()

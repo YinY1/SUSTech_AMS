@@ -1,8 +1,8 @@
 #ifndef USER_H
 #define USER_H
 
-#include <string>
 #include <cstring>
+#include <string>
 class user
 {
 protected:
@@ -15,15 +15,31 @@ protected:
 public:
     user() {}
     virtual bool login() = 0;
+    virtual void show(int) = 0;
     void set_password();
     void set_name();
     void set_province();
-    std::string set_college();
-    std::string set_phone_number();
-    std::string get_phone();
-    std::string get_name();
-    std::string get_id();
-    std::string get_province();
+    std::string set_college(); //好像没什么用
+    std::string set_phone_number()
+    {
+        std::string phone_number;
+    }
+    std::string get_phone()
+    {
+        return phone_number;
+    }
+    std::string get_name()
+    {
+        return name;
+    }
+    std::string get_id()
+    {
+        return id;
+    }
+    std::string get_province()
+    {
+        return province;
+    }
     template <typename T>
     bool endmark(T &s)
     {

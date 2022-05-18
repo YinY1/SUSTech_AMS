@@ -78,24 +78,4 @@ string user::set_college()
     return college;
 }
 
-string user::get_phone()
-{
-    return phone_number;
-}
-
-string user::get_name()
-{
-    return name;
-}
-
-string user::get_id()
-{
-    return id;
-}
-
-string user::get_province()
-{
-    return province;
-}
-
 //

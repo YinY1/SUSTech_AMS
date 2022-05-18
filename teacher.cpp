@@ -9,25 +9,23 @@ using namespace std;
 
 const teacher tmark = teacher();
 
-void teacher::signup() //没调好,写了nophone进去
+void teacher::signup() //只提供给管理员使用
 {
+    int count = 10000;
     teacher t;
     fstream f("tea.dat", ios::in | ios::out | ios::binary);
     f.seekp(0, ios::beg);
-    do
+    while (f.read((char *)&t, sizeof(teacher)) && !endmark(t))
     {
-        f.read((char *)&t, sizeof(teacher));
-    } while (!endmark(t));//这里之后要改
+        count++;
+    }
     f.seekp(-long(sizeof(teacher)), ios::cur);
+    cout << "id:" << count << endl;
+    strcpy(t.id, base64_encode(to_string(count)).c_str());
     set_name();
-    //set_province();
-    //set_college();
+    // set_college();
     set_password();
     set_ukey();
-    cout << "id:" << endl;
-    string id;
-    cin >> id;
-    strcpy(this->id, id.c_str());
     strcpy_s(t.phone_number, base64_encode(set_phone_number()).c_str());
     // cpinfo
     strcpy_s(t.password, base64_encode(password).c_str());
@@ -35,94 +33,9 @@ void teacher::signup() //没调好,写了nophone进去
     strcpy_s(t.ukey, base64_encode(ukey).c_str());
     f.write((char *)&t, sizeof(teacher));
     f.write((char *)&tmark, sizeof(teacher));
-    cout << "successfully set t?" << endl;
+    cout << "\nsuccessfully signed up\n"
+         << endl;
     f.close();
-}
-
-void teacher::admit()
-{
-    vector<student> vs = _sort(2);
-    int count = 0, sel;
-    while (1)
-    {
-        cls();
-        while (1)
-        {
-            cout << "\n\n请输入要对 " << vs[count].get_name() << " 进行的的操作：\n\n"
-                 << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出录取操作" << endl;
-            cin >> sel;
-            if (sel >= 1 && sel <= 4)
-                vs[count].show(sel);
-            else if (sel == 9)
-            {
-                count++;
-                break;
-            }
-            else if (sel == 0)
-                return;
-            else
-                cout << "输入错误，请重新输入" << endl;
-        }
-        int a_flag;
-        cout << "是否录取？1.是 2.否" << endl;
-        cin >> a_flag;
-        student s, ts;
-        fstream f("stu.dat", ios::in | ios::out | ios::binary);
-        f.seekp(0, ios::beg);
-        while (f.read((char *)&s, sizeof(student)))
-        {
-            ts.cpy_info(s);
-            if (ts.get_id() == vs[count - 1].get_id())
-            {
-                while (1)
-                {
-                    if (ukey_check())
-                    {
-                        vs[count - 1].set_is_admitted(abs(a_flag - 2));
-                        break;
-                    }
-                    else
-                        cout << "wrong" << endl;
-                }
-                f.seekp(-long(sizeof(student)), ios::cur);
-                f.write((char *)&vs[count - 1], sizeof(student));
-                break;
-            }
-        }
-        f.close();
-    }
-}
-
-bool teacher::read(char key[])
-{
-    char ekey[20];
-    teacher t;
-    fstream f("tea.dat", ios::in | ios::binary);
-    f.seekg(0, ios::beg);
-    strcpy_s(ekey, base64_encode(key).c_str());
-    do
-    {
-        f.read((char *)&t, sizeof(teacher));
-    } while (!endmark(t) && strcmp(ekey, t.phone_number));
-    if (strcmp(ekey, t.phone_number))
-    {
-        f.close();
-        return 0; //没有重复
-    }
-    string pass;
-    cout << "\n请输入密码：" << endl;
-    while (cin >> pass)
-    {
-        if (strcmp(base64_encode(pass).c_str(), t.password) == 0)
-        {
-            cout << "\n登录成功！" << endl;
-            this->cpy_info(t); //读取信息
-            break;
-        }
-        cout << "\n密码错误，请重新输入：" << endl;
-    }
-    f.close();
-    return 1;
 }
 
 bool teacher::login()
@@ -146,7 +59,95 @@ bool teacher::login()
     return 0;
 }
 
-void teacher::search(int choice) //特定需求查找
+void teacher::admit()
+{
+    vector<student> vs = _sort(2);
+    int count = 0, sel;
+    while (count < vs.size())
+    {
+        cls();
+        while (1)
+        {
+            cout << "\n目前还剩 " << vs.size() - count << " 位学生未进行审核"
+                 << "\n请输入要对 " << vs[count].get_name() << " 进行的的操作：\n\n"
+                 << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出录取操作" << endl;
+            cin >> sel;
+            if (sel >= 1 && sel <= 4)
+                vs[count].show(sel);
+            else if (sel == 9)
+            {
+                count++;
+                break;
+            }
+            else if (sel == 0)
+                return;
+            else
+                cout << "输入错误，请重新输入" << endl;
+        }
+        int a_flag;
+        cout << "是否录取？1.是 2.否" << endl;
+        cin >> a_flag;
+        student s, ts;
+        fstream f("stu.dat", ios::in | ios::out | ios::binary);
+        f.seekp(0, ios::beg);
+        while (f.read((char *)&s, sizeof(student)) && !endmark(s))
+        {
+            ts.cpy_info(s);
+            if (ts.get_id() == vs[count - 1].get_id())
+            {
+                while (1)
+                {
+                    if (ukey_check())
+                    {
+                        vs[count - 1].set_is_admitted(abs(a_flag - 2));
+                        break;
+                    }
+                    else
+                        cout << "wrong" << endl;
+                }
+                f.seekp(-long(sizeof(student)), ios::cur); //这里有问题
+                f.write((char *)&vs[count - 1], sizeof(student));
+                break;
+            }
+        }
+        f.close();
+    }
+    cls();
+    cout << "\n录取完毕！" << endl;
+}
+
+bool teacher::read(char key[])
+{
+    string ekey = base64_encode(key);
+    teacher t;
+    fstream f("tea.dat", ios::in | ios::binary);
+    f.seekg(0, ios::beg);
+    do
+    {
+        f.read((char *)&t, sizeof(teacher));
+    } while (!endmark(t) && ekey != t.phone_number && ekey != t.id); //通过手机号码或ID登录
+    if (ekey != t.phone_number && ekey != t.id)
+    {
+        f.close();
+        return 0; //没有重复
+    }
+    string pass;
+    cout << "\n请输入密码：" << endl;
+    while (cin >> pass)
+    {
+        if (strcmp(base64_encode(pass).c_str(), t.password) == 0)
+        {
+            cout << "\n登录成功！" << endl;
+            this->cpy_info(t); //读取信息
+            break;
+        }
+        cout << "\n密码错误，请重新输入：" << endl;
+    }
+    f.close();
+    return 1;
+}
+
+void teacher::show(int choice) //特定需求查找
 {
     student s, ts;
     fstream f("stu.dat", ios::in | ios::binary);
@@ -165,14 +166,17 @@ void teacher::search(int choice) //特定需求查找
             string n = ts.get_name();
             if (n == name)
             {
-                cout << "\n\n"
-                     << n << "\t\t总分 " << ts.get_score() << endl;
+                cout << "\n"
+                     << n << "\t\t总分 " << ts.get_score() << "\n"
+                     << endl;
+                ts.print_admitted();
                 flag = 1;
                 break;
             }
         }
         if (!flag)
-            cout << "\n\n没有找到该学生" << endl;
+            cout << "\n没有找到该学生\n"
+                 << endl;
         break;
     }
     case 2: //按学籍号查找
@@ -186,8 +190,10 @@ void teacher::search(int choice) //特定需求查找
             string n = ts.get_student_number();
             if (n == snum)
             {
-                cout << "\n\n"
-                     << n << "\t\t总分 " << ts.get_score() << endl;
+                cout << "\n"
+                     << n << "\t\t总分 " << ts.get_score() << "\n"
+                     << endl;
+                ts.print_admitted();
                 break;
             }
         }
@@ -216,6 +222,59 @@ void teacher::search(int choice) //特定需求查找
             {
                 cout << "\n"
                      << i.get_name() << "\t\t总分 " << i.get_score() << endl;
+                i.print_admitted();
+            }
+        }
+        break;
+    }
+    case 4: // 列出已经录取的学生
+    {
+        vector<student> vs;
+        while (f.read((char *)&s, sizeof(student)) && !endmark(s))
+        {
+            ts.cpy_info(s);
+            if (ts.get_is_admitted())
+                vs.push_back(ts);
+        }
+        if (vs.empty())
+            cout << "\n\n没有已经录取的学生" << endl;
+        else
+        {
+            sort(vs.begin(), vs.end(), [](student &a, student &b)
+                 { return a.get_score() > b.get_score(); }); //按分数高低排序
+            cls();
+            cout << "\n\n已经录取的学生：\n"
+                 << endl;
+            for (auto i : vs)
+            {
+                cout << "\n"
+                     << i.get_name() << "\t\t总分 " << i.get_score() << endl;
+            }
+        }
+        break;
+    }
+    case 5: //列出未录取的学生
+    {
+        vector<student> vs;
+        while (f.read((char *)&s, sizeof(student)) && !endmark(s))
+        {
+            ts.cpy_info(s);
+            if (!ts.get_is_admitted())
+                vs.push_back(ts);
+        }
+        if (vs.empty())
+            cout << "\n\n没有未录取的学生" << endl;
+        else
+        {
+            sort(vs.begin(), vs.end(), [](student &a, student &b)
+                 { return a.get_score() > b.get_score(); }); //按分数高低排序
+            cls();
+            cout << "\n\n未录取的学生：\n"
+                 << endl;
+            for (auto i : vs)
+            {
+                cout << "\n"
+                     << i.get_name() << "\t\t总分 " << i.get_score() << endl;
             }
         }
         break;
@@ -223,30 +282,23 @@ void teacher::search(int choice) //特定需求查找
     }
     f.close();
 }
-
 vector<student> teacher::_sort(int choice) //排序
 {
     vector<student> vs;
     student s, ts;
     fstream f("stu.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
-    /* do
-    {
-        f.read((char *)&s, sizeof(student));
-        ts.cpy_info(s);
-        vs.push_back(ts);
-    } while (!endmark(s));
-    f.close();
-    vs.pop_back(); */ //会把endmark 读进去，所以要删掉最后一个
-    //试试这个
-    
     while (f.read((char *)&s, sizeof(student)) && !endmark(s))
     {
         ts.cpy_info(s);
         vs.push_back(ts);
     }
     f.close();
-    
+    if (vs.empty())
+    {
+        cout << "\n暂无学生数据！" << endl;
+        return vs;
+    }
     //"排序模式：1.按姓名 2.按成绩(仅能在这里admit) 3.按省份 0.退出"<<endl;
     switch (choice)
     {
@@ -274,8 +326,7 @@ void teacher::cpy_info(const teacher &t) //登录后读取教师信息
     strcpy_s(password, t.password);
     strcpy_s(id, base64_decode(t.id).c_str());
     strcpy_s(college, base64_decode(t.college).c_str());
-    strcpy_s(phone_number, t.phone_number);
+    strcpy_s(phone_number, base64_decode(t.phone_number).c_str());
     strcpy_s(name, base64_decode(t.name).c_str());
-    strcpy_s(province, base64_decode(t.province).c_str());
-    strcpy_s(ukey, base64_decode(t.ukey).c_str());
+    strcpy_s(ukey, t.ukey);
 }

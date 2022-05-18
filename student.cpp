@@ -462,7 +462,7 @@ void student::set_score()
         case 1:
         {
             int choice;
-            memset(score, 0, sizeof(score));
+            memset(score, 0, sizeof(score)); //这里有问题
             cout << "\n请选择需要填写的成绩：\n"
                  << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
                  << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
@@ -557,15 +557,14 @@ void student::show(int choice)
 bool student::read(char key[], int choice)
 {
     student r;
-    char ekey[20];
-    strcpy_s(ekey, base64_encode(key).c_str());
+    string ekey = base64_encode(key);
     fstream f("stu.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
-        f.read((char *)&r, sizeof(student));
-    } while (strcmp(ekey, r.phone_number) && !endmark(r));
-    if (strcmp(ekey, r.phone_number))
+        f.read((char *)&r, sizeof(r));
+    } while (ekey != r.phone_number && !endmark(r));
+    if (ekey != r.phone_number)
     {
         f.close();
         return 0; //没有重复
@@ -594,10 +593,10 @@ bool student::read(char key[], int choice)
     {
         strcpy_s(security_question, r.security_question);
         strcpy_s(security_answer, r.security_answer);
-        strcpy_s(phone_number, ekey);
+        strcpy_s(phone_number, ekey.c_str());
         break;
     }
-    default://调试用，防止写错了没发现
+    default: //调试用，防止写错了没发现
         cout << "read(错了)" << endl;
         pause();
         break;

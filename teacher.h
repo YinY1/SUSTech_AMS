@@ -13,7 +13,7 @@ public:
     bool login();
     bool read(char[]);
     void admit();
-    void search(int);
+    void show(int);
     std::vector<student> _sort(int);
     void cpy_info(const teacher &);
 };

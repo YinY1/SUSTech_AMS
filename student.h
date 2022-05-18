@@ -5,7 +5,7 @@
 
 class student : public user
 {
-    char gender[5] = {}; //性别
+    char gender[5] = {};                    //性别
     char student_number[50] = {};           //学籍号                //省份
     char nation[10] = {};                   //民族
     char political_status[30] = {};         //政治面貌
@@ -21,9 +21,9 @@ class student : public user
     char experience[6][1005] = {};          //中学经历
     char security_question[55] = {"empty"}; //密保问题
     char security_answer[25] = {};          //密保答案
-    char application[5][20] = {};              //志愿
+    char application[5][20] = {};           //志愿
     float score[9][13] = {};                //成绩
-    bool is_admitted=0;                       //是否录取
+    bool is_admitted = 0;                   //是否录取
 public:
     student() {}
     void signup();
@@ -45,11 +45,20 @@ public:
     bool read(char[], int);
     void write(int);
     void set_id();
-    void set_is_admitted(bool select){is_admitted=select;}
+    void set_is_admitted(bool select) { is_admitted = select; }
     int input_phone_number(int);
     void cpy_info(const student &);
-    bool get_is_admitted(){return is_admitted;}
-    float get_score()//获取高考成绩
+    bool get_is_admitted() { return is_admitted; }
+    void print_admitted()
+    {
+        if (is_admitted)
+            std::cout << "录取\n"
+                      << std::endl;
+        else
+            std::cout << "未录取\n"
+                      << std::endl;
+    }
+    float get_score() //获取高考成绩
     {
         return score[8][12];
     }

@@ -1,4 +1,4 @@
-#include "Administrator.h"
+#include "admin.h"
 #include "control.h"
 #include "student.h"
 #include "teacher.h"
@@ -53,7 +53,7 @@ int main()
             }
             case 8:
             {
-                Administrator a;
+                admin a;
                 a.stu_init();
                 pause();
                 cls();
@@ -61,7 +61,7 @@ int main()
             }
             case 9:
             {
-                Administrator a;
+                admin a;
                 a.tea_init();
                 pause();
                 cls();
@@ -82,8 +82,6 @@ int main()
         }
     }
 }
-
-const student mark = student();
 
 void stu_login()
 {
@@ -188,17 +186,20 @@ void tea_login()
             {
             case 1:
             {
-                t.search(1);
+                t.show(1);
+                pause();
                 break;
             }
             case 2:
             {
-                t.search(2);
+                t.show(2);
+                pause();
                 break;
             }
             case 3:
             {
-                t.search(3);
+                t.show(3);
+                pause();
                 break;
             }
             //可以简单整合一下
@@ -209,6 +210,7 @@ void tea_login()
                     cout << "\n"
                          << i.get_name() << "\t生源： " << i.get_province() << "\t总分 " << i.get_score() << endl;
                 cout << "\n共有 " << vs.size() << " 个学生" << endl;
+                pause();
                 break;
             }
             case 5:
@@ -218,6 +220,7 @@ void tea_login()
                     cout << "\n"
                          << i.get_name() << "\t生源： " << i.get_province() << "\t总分 " << i.get_score() << endl;
                 cout << "\n共有 " << vs.size() << " 个学生" << endl;
+                pause();
                 break;
             }
             case 6:
@@ -227,35 +230,41 @@ void tea_login()
                     cout << "\n"
                          << i.get_name() << "\t生源： " << i.get_province() << "\t总分 " << i.get_score() << endl;
                 cout << "\n共有 " << vs.size() << " 个学生" << endl;
+                pause();
                 break;
             }
             case 7:
             {
                 t.admit();
+                pause();
                 break;
             }
             default:
+                cls();
                 return;
             }
+            cls();
         }
     }
 }
 
 void admin_login()
 {
-    Administrator a;
+    admin a;
     if (a.login())
     {
         while (1)
         {
-            cout << "choice: 1.showt,2.inits,3.initt,4.sett,5.exit" << endl;
+            cls();
+            cout << "choice: 1.showt,2.inits,3.initt,4.sett,0.exit" << endl;
             int choice;
             cin >> choice;
             switch (choice)
             {
             case 1:
             {
-                a.search(1);
+                a.show(1);
+                pause();
                 break;
             }
             case 2:
@@ -267,6 +276,7 @@ void admin_login()
                 }
                 else
                     cout << "ukey error" << endl;
+                pause();
                 break;
             }
             case 3:
@@ -278,6 +288,7 @@ void admin_login()
                 }
                 else
                     cout << "ukey error" << endl;
+                pause();
                 break;
             }
             case 4:
@@ -287,23 +298,24 @@ void admin_login()
                 {
                     teacher t;
                     t.signup();
+                    pause();
                 }
                 else
                     cout << "ukey error" << endl;
                 break;
             }
-            case 5:
-            {
+            case 0:
                 return;
-            }
             default:
+                cout << "\nWhat's wrong with u?" << endl;
+                pause();
                 break;
             }
         }
     }
     else
     {
-        cout << "WRONG NUMBER" << endl;
+        cout << "WRONG" << endl;
     }
 }
 //
