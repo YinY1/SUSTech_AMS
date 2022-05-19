@@ -61,6 +61,19 @@ bool student::login()
     return 0;
 }
 
+void student::set_province()
+{
+    string province;
+    bool check = 0;
+    cout << "请输入省份（地区）：" << endl;
+    while (!check)
+    {
+        cin >> province;
+        check = province_check(province); //判断省份是否合法
+    }
+    strcpy_s(this->province, province.c_str());
+}
+
 void student::set_id()
 {
     string id;
@@ -450,46 +463,52 @@ void student::rechieve_password()
 //暂时不弄美观
 void student::set_score()
 {
-    int select;
+    string select;
     const char *test[] = {"高一上期末考", "高一下期末考", "高二上期末考", "高二下期末考", "高三模拟考一（校级以上）", "高三模拟考二（校级以上）", "高三模拟考三（校级以上）", "学业水平考试", "高考"};
-    cout << "\n请选择需要进行的操作：\n"
-         << "1.填写成绩\t2.查看成绩\t"
-         << "0.返回" << endl;
-    while (cin >> select)
+    while (1)
     {
-        switch (select)
+        cout << "\n请选择需要进行的操作：\n"
+             << "1.填写成绩\t2.查看成绩\t"
+             << "0.返回" << endl;
+        getline(cin, select);
+        if (choice_check(select, 0, 2))
+        {
+            pause();
+            continue;
+        }
+        switch (stoi(select))
         {
         case 1:
         {
-            int choice;
+            string choice;
             memset(score, 0, sizeof(score)); //这里有问题
-            cout << "\n请选择需要填写的成绩：\n"
-                 << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
-                 << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
-            while (cin >> choice)
+            while (1)
             {
-                if (choice == 0)
+                cls();
+                cout << "\n请选择需要填写的成绩：\n"
+                     << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
+                     << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
+                getline(cin, choice);
+                if (choice_check(choice, 0, 9))
+                {
+                    pause();
+                    continue;
+                }
+                int c = stoi(choice);
+                if (c == 0)
                 {
                     cls();
                     break;
                 }
-                if (choice > 9)
-                {
-                    cout << "\n输入错误！请重新输入！" << endl;
-                    continue;
-                }
                 cout << "请按照顺序输入你的成绩，没有的请填0（150分制）：\n"
                      << "语文  数学  外语  物理  化学  生物  地理  政治  历史  技术  年级排名  年级总人数\n\n"
-                     << "请输入 " << test[choice - 1] << " 成绩：" << endl;
+                     << "请输入 " << test[c - 1] << " 成绩：" << endl;
                 for (int i = 0; i < 12; i++)
                 {
-                    cin >> score[choice - 1][i];
+                    cin >> score[c - 1][i];
                     if (i < 10)
-                        score[choice - 1][12] += score[choice - 1][i]; //总分
+                        score[c - 1][12] += score[c - 1][i]; //总分
                 }
-                cout << "\n请选择需要填写的成绩：\n"
-                     << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
-                     << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
             }
             break;
         }
@@ -703,6 +722,16 @@ void student::write(int choice)
         break;
     }
     f.close();
+}
+
+void student::print_admitted()
+{
+    if (is_admitted)
+        cout << "录取\n"
+             << endl;
+    else
+        cout << "未录取\n"
+             << endl;
 }
 
 bool student::confirm_password()

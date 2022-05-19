@@ -6,7 +6,6 @@
 #include <vector>
 class teacher : public manager
 {
-    char college[50] = {};//学院
 public:
     teacher() {}
     void signup();

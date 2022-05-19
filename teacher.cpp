@@ -62,7 +62,16 @@ bool teacher::login()
 void teacher::admit()
 {
     vector<student> vs = _sort(2);
-    int count = 0, sel;
+    //从容器中删除已被录取的学生
+    for(auto it = vs.begin(); it != vs.end();)
+    {
+        if(it->get_is_admitted())
+            it = vs.erase(it);
+        else
+            it++;
+    }
+    size_t count = 0;
+    int sel;
     while (count < vs.size())
     {
         cls();
@@ -99,14 +108,16 @@ void teacher::admit()
                 {
                     if (ukey_check())
                     {
-                        vs[count - 1].set_is_admitted(abs(a_flag - 2));
+                        s.set_is_admitted(abs(a_flag - 2));
+                        cout<<s.get_is_admitted()<<endl;
+                        pause();
                         break;
                     }
                     else
                         cout << "wrong" << endl;
                 }
-                f.seekp(-long(sizeof(student)), ios::cur); //这里有问题
-                f.write((char *)&vs[count - 1], sizeof(student));
+                f.seekp(-long(sizeof(student)), ios::cur); 
+                f.write((char *)&s, sizeof(student));
                 break;
             }
         }
@@ -137,7 +148,6 @@ bool teacher::read(char key[])
     {
         if (strcmp(base64_encode(pass).c_str(), t.password) == 0)
         {
-            cout << "\n登录成功！" << endl;
             this->cpy_info(t); //读取信息
             break;
         }
@@ -167,8 +177,7 @@ void teacher::show(int choice) //特定需求查找
             if (n == name)
             {
                 cout << "\n"
-                     << n << "\t\t总分 " << ts.get_score() << "\n"
-                     << endl;
+                     << n << "\t\t总分 " << ts.get_score() << "\t";
                 ts.print_admitted();
                 flag = 1;
                 break;
@@ -191,8 +200,7 @@ void teacher::show(int choice) //特定需求查找
             if (n == snum)
             {
                 cout << "\n"
-                     << n << "\t\t总分 " << ts.get_score() << "\n"
-                     << endl;
+                     << n << "\t\t总分 " << ts.get_score() << "\t";
                 ts.print_admitted();
                 break;
             }
@@ -282,6 +290,7 @@ void teacher::show(int choice) //特定需求查找
     }
     f.close();
 }
+
 vector<student> teacher::_sort(int choice) //排序
 {
     vector<student> vs;
@@ -325,7 +334,6 @@ void teacher::cpy_info(const teacher &t) //登录后读取教师信息
 {
     strcpy_s(password, t.password);
     strcpy_s(id, base64_decode(t.id).c_str());
-    strcpy_s(college, base64_decode(t.college).c_str());
     strcpy_s(phone_number, base64_decode(t.phone_number).c_str());
     strcpy_s(name, base64_decode(t.name).c_str());
     strcpy_s(ukey, t.ukey);

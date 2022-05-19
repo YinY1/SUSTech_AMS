@@ -10,7 +10,6 @@ bool id_check(string id)
         cout << "身份证号码长度不符合要求，请重新输入：";
         return 0;
     }
-
     string map = "10X98765432";
     int ans = 0, arr[] = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
     for (int i = 0; i < 17; i++)
@@ -59,6 +58,7 @@ bool province_check(string province)
 
 bool phone_check(string num)
 {
+    //你这电话号码还能用11个字母的阿
     if (num.size() != 11)
     {
         cout << "手机号码有误，请重新输入：";
@@ -78,13 +78,27 @@ bool nation_check(string nation)
     return 0;
 }
 
-bool college_check(string college)
+bool choice_check(string s, int min, int max)
 {
-    //学院
-    const char *p[] = {"理学院", "工学院","医学院","商学院","人文社科学院","生命科学学院","设计学院"};
-    for (int i = 0; i < 7; i++)
-        if (college == p[i])
-            return 1;
-    cout << "请输入正确的学院！" << endl;
+    try
+    {
+        if (s.length() > 1 || s < "0" || s > "9") //因为没有超过10的输入，所以0~9即可
+            throw s;
+        int k = stoi(s);
+        if (k < min || k > max)
+            throw k;
+    }
+    catch (string s)
+    {
+        cout << "您刚才输入了： " << s << " 输入错误！请重新输入！\n"
+             << endl;
+        return 1;
+    }
+    catch (int k)
+    {
+        cout << "您刚才输入了： " << k << " 输入错误！请重新输入！\n"
+             << endl;
+        return 1;
+    }
     return 0;
 }

@@ -54,7 +54,7 @@ void admin::show(int choice)
     }
     for (auto i : vt)
         cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone() << " " << base64_decode(i.get_ukey().c_str()) << endl;
-    cout << "\n共 " << vt.size() << " 位教师" << endl;
+    cout << "\n" << vt.size() << " teacher(s)" << endl;
 }
 
 bool admin::login()

@@ -5,6 +5,7 @@
 
 class student : public user
 {
+    char province[10] = {};
     char gender[5] = {};                    //性别
     char student_number[50] = {};           //学籍号                //省份
     char nation[10] = {};                   //民族
@@ -33,6 +34,7 @@ public:
     bool cancel_account();
     void rechieve_password();
     void show(int);
+    void set_province();
     void set_security_question();
     void set_basic_info();
     void set_parents_info();
@@ -49,15 +51,7 @@ public:
     int input_phone_number(int);
     void cpy_info(const student &);
     bool get_is_admitted() { return is_admitted; }
-    void print_admitted()
-    {
-        if (is_admitted)
-            std::cout << "录取\n"
-                      << std::endl;
-        else
-            std::cout << "未录取\n"
-                      << std::endl;
-    }
+    void print_admitted();
     float get_score() //获取高考成绩
     {
         return score[8][12];
@@ -65,6 +59,10 @@ public:
     std::string get_student_number()
     {
         return student_number;
+    }
+    std::string get_province()
+    {
+        return province;
     }
 };
 

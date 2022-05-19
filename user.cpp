@@ -49,33 +49,3 @@ void user::set_password()
     }
     strcpy_s(this->password, password.c_str());
 }
-
-void user::set_province()
-{
-    string province;
-    bool check = 0;
-    cout << "请输入省份（地区）：" << endl;
-    while (!check)
-    {
-        cin >> province;
-        check = province_check(province); //判断省份是否合法
-    }
-    strcpy_s(this->province, province.c_str());
-}
-
-string user::set_college()
-{
-    string college;
-    bool check = 0;
-    cout << "请输入学院：" << endl;
-    while (!check)
-    {
-        cin >> college;
-        if (college == "0")
-            break;
-        check = college_check(college); //判断学院是否合法
-    }
-    return college;
-}
-
-//

@@ -2,6 +2,7 @@
 #include "control.h"
 #include "student.h"
 #include "teacher.h"
+#include "check.h"
 #include <fstream>
 #include <iostream>
 
@@ -17,12 +18,18 @@ int main()
 {
     while (1)
     {
-        int choice;
+        string choice;
         cls();
         cout << "欢迎使用管理系统！\n"
-             << "1.学生注册\t2.管理登录\t3.学生登录\t4.教师登录\n\n5.找回密码(学生)\t6.报考指南\t8.学生初始化\t9.教师初始化\t0.退出" << endl;
-        cin >> choice;
-        switch (choice)
+             << "1.学生注册\t2.管理登录\t3.学生登录\t4.教师登录\n\n5.找回密码(学生)\t6.报考指南\t7.学生初始化\t8.教师初始化\t0.退出" << endl;
+        cin.ignore();
+        getline(cin, choice);
+        if (choice_check(choice, 0, 8))
+        {
+            pause();
+            continue;
+        }
+        switch (stoi(choice))
         {
             {
             case 1:
@@ -51,7 +58,7 @@ int main()
                 stu_rechieve_password();
                 break;
             }
-            case 8:
+            case 7:
             {
                 admin a;
                 a.stu_init();
@@ -59,7 +66,7 @@ int main()
                 cls();
                 break;
             }
-            case 9:
+            case 8:
             {
                 admin a;
                 a.tea_init();
@@ -85,23 +92,22 @@ int main()
 
 void stu_login()
 {
-
     student stu;
     if (stu.login())
     {
         bool flag = 1;
         while (flag)
         {
-            cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\n5.设置密保问题\t6.修改密码\t9.删除账户\t0.退出登录" << endl;
-            int select;
-            cin >> select;
-            switch (select)
+            cout << "请选择你要进行的操作：\n1.查看\\修改个人基本信息\t2.查看\\修改家庭成员信息\t3.填写个人经历\t4.填写成绩\n5.设置密保问题\t6.修改密码\t7.删除账户\t0.退出登录" << endl;
+            string choice;
+            getline(cin, choice);
+            if (choice_check(choice, 0, 7))
             {
-            case 0:
-            {
-                flag = 0;
-                break;
+                pause();
+                continue;
             }
+            switch (stoi(choice))
+            {
             case 1:
             {
                 stu.show(1);
@@ -137,12 +143,19 @@ void stu_login()
                     flag = 0;
                 break;
             }
-            case 9:
+            case 7:
             {
                 if (stu.cancel_account())
                     flag = 0;
                 break;
             }
+            case 0:
+            {
+                flag = 0;
+                break;
+            }
+            default:
+                break;
             }
         }
         cls();
@@ -176,13 +189,22 @@ void tea_login()
     teacher t;
     if (t.login())
     {
-        cout << "登录成功。" << endl;
+        cout << "\n登录成功。" << endl;
         while (1)
         {
-            cout << "操作" << endl;
-            int choice;
-            cin >> choice;
-            switch (choice)
+            cout << "\n操作:\n1.按姓名查找 2.按学籍号查找 3.按分数段查找\n\n"
+                 << "4.列出已录取的学生 5.列出未录取的学生\n\n"
+                 << "6.按姓名排序 7.按成绩排序 8.按省份排序\n\n"
+                 << "9.进行录取审核 0.退出\n"
+                 << endl;
+            string choice;
+            getline(cin, choice);
+            if (choice_check(choice, 0, 9))
+            {
+                pause();
+                continue;
+            }
+            switch (stoi(choice))
             {
             case 1:
             {
@@ -202,8 +224,20 @@ void tea_login()
                 pause();
                 break;
             }
-            //可以简单整合一下
             case 4:
+            {
+                t.show(4);
+                pause();
+                break;
+            }
+            case 5:
+            {
+                t.show(5);
+                pause();
+                break;
+            }
+            //可以简单整合一下
+            case 6:
             {
                 vector<student> vs = t._sort(1);
                 for (auto i : vs)
@@ -213,7 +247,7 @@ void tea_login()
                 pause();
                 break;
             }
-            case 5:
+            case 7:
             {
                 vector<student> vs = t._sort(2);
                 for (auto i : vs)
@@ -223,7 +257,7 @@ void tea_login()
                 pause();
                 break;
             }
-            case 6:
+            case 8:
             {
                 vector<student> vs = t._sort(3);
                 for (auto i : vs)
@@ -233,11 +267,19 @@ void tea_login()
                 pause();
                 break;
             }
-            case 7:
+            case 9:
             {
                 t.admit();
                 pause();
                 break;
+            }
+            case 0:
+            {
+                cls();
+                cout << "\n已成功登出！\n"
+                     << endl;
+                pause();
+                return;
             }
             default:
                 cls();
@@ -257,9 +299,14 @@ void admin_login()
         {
             cls();
             cout << "choice: 1.showt,2.inits,3.initt,4.sett,0.exit" << endl;
-            int choice;
-            cin >> choice;
-            switch (choice)
+            string choice;
+            getline(cin, choice);
+            if (choice_check(choice, 0, 4))
+            {
+                pause();
+                continue;
+            }
+            switch (stoi(choice))
             {
             case 1:
             {
