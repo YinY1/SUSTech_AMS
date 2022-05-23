@@ -7,7 +7,7 @@
             "${workspaceFolder}\\**.cpp",
             "-o",    // 指定输出文件名，不加该参数则默认输出a.exe，Linux下默认a.out
             "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "-g",    // -g为debug，-O2 release优化标识一般用o2优化 其他百度
+            "-O2",    // -g为debug，-O2 release优化标识一般用o2优化 其他百度
             "-m64",  // 不知为何有时会生成16位程序而无法运行，此条可强制生成64位的
             "-Wall", // 开启额外警告
             

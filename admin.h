@@ -7,7 +7,7 @@ class admin : public manager
 public:
     admin();
     bool login();
-    void show(int);
+    void display(int);
     void stu_init();
     void tea_init();
 };

@@ -50,7 +50,6 @@ bool teacher::login()
         if (read(key))
         {
             cls();
-            cout << "欢迎" << name << endl;
             return 1;
         }
         else
@@ -62,10 +61,10 @@ bool teacher::login()
 void teacher::admit()
 {
     vector<student> vs = _sort(2);
-    //从容器中删除已被录取的学生
-    for(auto it = vs.begin(); it != vs.end();)
+    //从容器中删除已被审核的学生
+    for (auto it = vs.begin(); it != vs.end();)
     {
-        if(it->get_is_admitted())
+        if (it->get_is_admitted())
             it = vs.erase(it);
         else
             it++;
@@ -77,12 +76,12 @@ void teacher::admit()
         cls();
         while (1)
         {
-            cout << "\n目前还剩 " << vs.size() - count << " 位学生未进行审核"
+            cout << "\n目前还剩 " << vs.size() - count << " 位学生未审核\n"
                  << "\n请输入要对 " << vs[count].get_name() << " 进行的的操作：\n\n"
                  << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出录取操作" << endl;
             cin >> sel;
             if (sel >= 1 && sel <= 4)
-                vs[count].show(sel);
+                vs[count].display(sel);
             else if (sel == 9)
             {
                 count++;
@@ -94,7 +93,7 @@ void teacher::admit()
                 cout << "输入错误，请重新输入" << endl;
         }
         int a_flag;
-        cout << "是否录取？1.是 2.否" << endl;
+        cout << "是否通过审核？1.是 2.否" << endl;
         cin >> a_flag;
         student s, ts;
         fstream f("stu.dat", ios::in | ios::out | ios::binary);
@@ -108,15 +107,14 @@ void teacher::admit()
                 {
                     if (ukey_check())
                     {
-                        s.set_is_admitted(abs(a_flag - 2));
-                        cout<<s.get_is_admitted()<<endl;
+                        s.set_is_admitted(a_flag); // 0为未审批，1为通过，2为未通过
                         pause();
                         break;
                     }
                     else
                         cout << "wrong" << endl;
                 }
-                f.seekp(-long(sizeof(student)), ios::cur); 
+                f.seekp(-long(sizeof(student)), ios::cur);
                 f.write((char *)&s, sizeof(student));
                 break;
             }
@@ -125,6 +123,7 @@ void teacher::admit()
     }
     cls();
     cout << "\n录取完毕！" << endl;
+    cin.ignore();
 }
 
 bool teacher::read(char key[])
@@ -157,7 +156,7 @@ bool teacher::read(char key[])
     return 1;
 }
 
-void teacher::show(int choice) //特定需求查找
+void teacher::display(int choice) //特定需求查找
 {
     student s, ts;
     fstream f("stu.dat", ios::in | ios::binary);
@@ -235,49 +234,26 @@ void teacher::show(int choice) //特定需求查找
         }
         break;
     }
-    case 4: // 列出已经录取的学生
+    case 4:
+    case 5: // 列出已（未）录取的学生
     {
+        const char *p[] = {"已录取", "未录取"};
         vector<student> vs;
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_is_admitted())
+            if (ts.get_is_admitted() == (choice - 3))
                 vs.push_back(ts);
         }
         if (vs.empty())
-            cout << "\n\n没有已经录取的学生" << endl;
+            cout << "\n\n没有" << p[choice - 4] << "的学生" << endl;
         else
         {
             sort(vs.begin(), vs.end(), [](student &a, student &b)
                  { return a.get_score() > b.get_score(); }); //按分数高低排序
             cls();
-            cout << "\n\n已经录取的学生：\n"
-                 << endl;
-            for (auto i : vs)
-            {
-                cout << "\n"
-                     << i.get_name() << "\t\t总分 " << i.get_score() << endl;
-            }
-        }
-        break;
-    }
-    case 5: //列出未录取的学生
-    {
-        vector<student> vs;
-        while (f.read((char *)&s, sizeof(student)) && !endmark(s))
-        {
-            ts.cpy_info(s);
-            if (!ts.get_is_admitted())
-                vs.push_back(ts);
-        }
-        if (vs.empty())
-            cout << "\n\n没有未录取的学生" << endl;
-        else
-        {
-            sort(vs.begin(), vs.end(), [](student &a, student &b)
-                 { return a.get_score() > b.get_score(); }); //按分数高低排序
-            cls();
-            cout << "\n\n未录取的学生：\n"
+            cout << "\n\n"
+                 << p[choice - 4] << "的学生如下：\n"
                  << endl;
             for (auto i : vs)
             {

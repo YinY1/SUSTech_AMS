@@ -25,14 +25,9 @@ bool id_check(string id)
 
 bool password_check(string password)
 {
-    if (password.length() > 16 || password.length() < 6)
+    if (password.length() > 16 || password.length() < 6||password.find(" ") != string::npos || password.find("\n") != string::npos || password.find("\t") != string::npos || password.find("\r") != string::npos)
     {
-        cout << "密码长度不符合要求，请重新输入：";
-        return 0;
-    }
-    if (password.find(" ") != string::npos || password.find("\n") != string::npos || password.find("\t") != string::npos || password.find("\r") != string::npos)
-    {
-        cout << "密码不能包含以下字符：空格、回车、换行、制表符!请重新输入!" << endl;
+        cout << "密码长度需要在6~16位，\n密码不能包含以下字符：空格、回车、换行、制表符!\n请重新输入："<<endl;
         return 0;
     }
     cout<<"请再次确认密码：";
@@ -58,10 +53,16 @@ bool province_check(string province)
 
 bool phone_check(string num)
 {
-    //你这电话号码还能用11个字母的阿
-    if (num.size() != 11)
+    try
     {
-        cout << "手机号码有误，请重新输入：";
+        stoll(num);
+        if (num.size() != 11)
+            throw num;
+    }
+    catch (...)
+    {
+        cout << "请输入正确的电话号码！输入0退出" << endl;
+        cin.ignore(1024, '\n');
         return 0;
     }
     return 1;
@@ -82,21 +83,13 @@ bool choice_check(string s, int min, int max)
 {
     try
     {
-        if (s.length() > 1 || s < "0" || s > "9") //因为没有超过10的输入，所以0~9即可
-            throw s;
-        int k = stoi(s);
-        if (k < min || k > max)
+        int k = stoi(s);//当选项s不为数字时，抛出异常
+        if (k < min || k > max)//当选项s不在范围内时，抛出异常
             throw k;
     }
-    catch (string s)
+    catch (...)
     {
-        cout << "您刚才输入了： " << s << " 输入错误！请重新输入！\n"
-             << endl;
-        return 1;
-    }
-    catch (int k)
-    {
-        cout << "您刚才输入了： " << k << " 输入错误！请重新输入！\n"
+        cout <<"\n请重新输入正确的选项！\n"
              << endl;
         return 1;
     }

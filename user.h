@@ -14,7 +14,7 @@ protected:
 public:
     user() {}
     virtual bool login() = 0;
-    virtual void show(int) = 0;
+    virtual void display(int) = 0;
     void set_password();
     void set_name();
     std::string set_phone_number();
@@ -33,7 +33,7 @@ public:
     template <typename T>
     bool endmark(T &s)
     {
-        return strcmp((s.get_phone()).c_str(), "nophone") == 0;
+        return s.get_phone() == "nophone";
     }
 };
 

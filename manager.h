@@ -11,7 +11,7 @@ protected:
 public:
     bool ukey_check();
     void set_ukey();
-    virtual void show(int) = 0;
+    virtual void display(int) = 0;
     std::string get_ukey() { return ukey; }
 };
 

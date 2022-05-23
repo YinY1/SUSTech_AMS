@@ -24,16 +24,17 @@ class student : public user
     char security_answer[25] = {};          //密保答案
     char application[5][20] = {};           //志愿
     float score[9][13] = {};                //成绩
-    bool is_admitted = 0;                   //是否录取
+    int is_admitted = 0;                    //是否录取
 public:
-    student() {}
-    void signup();
+    student();
     bool login();
     bool confirm_password();
     bool change_password();
     bool cancel_account();
+    bool read(char[], int);
     void rechieve_password();
-    void show(int);
+    void signup();
+    void display(int);
     void set_province();
     void set_security_question();
     void set_basic_info();
@@ -44,14 +45,13 @@ public:
     void set_nation();
     void set_political_status();
     void set_school_name();
-    bool read(char[], int);
     void write(int);
     void set_id();
-    void set_is_admitted(bool select) { is_admitted = select; }
-    int input_phone_number(int);
-    void cpy_info(const student &);
-    bool get_is_admitted() { return is_admitted; }
+    void set_is_admitted(int select) { is_admitted = select; }
     void print_admitted();
+    void cpy_info(const student &);
+    int input_phone_number(int);
+    int get_is_admitted() { return is_admitted; }
     float get_score() //获取高考成绩
     {
         return score[8][12];

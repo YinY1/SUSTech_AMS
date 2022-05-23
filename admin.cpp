@@ -15,12 +15,12 @@ const teacher tmark = teacher();
 
 admin::admin()
 {
-    strcpy_s(password, "123456");
+    strcpy_s(password, "admin");
     strcpy_s(phone_number, "12345678901");
     strcpy_s(ukey, "YWRtaW4=");
 }
 
-void admin::show(int choice)
+void admin::display(int choice)
 {
     vector<teacher> vt;
     teacher r, tr;
@@ -59,6 +59,7 @@ void admin::show(int choice)
 
 bool admin::login()
 {
+    cls();
     string pass;
     cin >> pass;
     return pass == password;

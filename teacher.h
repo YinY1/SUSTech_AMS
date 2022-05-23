@@ -8,13 +8,13 @@ class teacher : public manager
 {
 public:
     teacher() {}
-    void signup();
     bool login();
     bool read(char[]);
     void admit();
-    void show(int);
-    std::vector<student> _sort(int);
+    void signup();
+    void display(int);
     void cpy_info(const teacher &);
+    std::vector<student> _sort(int);
 };
 
 #endif
