@@ -3,7 +3,9 @@
 #include "check.h"
 #include "control.h"
 #include <fstream>
+#include <iomanip>
 #include <iostream>
+
 //包含windows.h前使用std会导致byte重定义https://github.com/msys2/MINGW-packages/issues/7035
 //所以不要在头文件using,实在不想打std::可以在cpp里面using，尽量不要using namespace，除非确定没有重复。
 using namespace std;
@@ -17,6 +19,10 @@ student::student()
 
 void student::signup()
 {
+    middle("---------------------", 1);
+    middle("欢迎使用管理系统!", 2);
+    middle("---------------------", 3);
+    cout << "\n[INFO]请按照提示进行注册\n\n";
     strcpy_s(phone_number, set_phone_number().c_str());
     //查重
     if (strcmp(phone_number, "0") == 0)
@@ -25,7 +31,8 @@ void student::signup()
     }
     if (read(phone_number, 0))
     {
-        cout << "用户已存在！" << endl;
+        cout << "\n[WRONG]用户已存在！\n"
+             << endl;
         return;
     }
     else
@@ -37,7 +44,8 @@ void student::signup()
 int student::input_phone_number(int read_flag)
 {
     char key[15];
-    cout << "请输入手机号：\t 输入0返回" << endl;
+    cout << "\n[INFO]请输入手机号：\t 输入0返回\n"
+         << endl;
     cin >> key;
     if (key[0] == '0')
         return 0;
@@ -64,7 +72,7 @@ bool student::login()
             return 1;
         }
         case -1:
-            cout << "用户不存在！请重新输入账号！\t输入0返回" << endl;
+            cout << "\n[WRONG]用户不存在！请重新输入账号！\t输入0返回" << endl;
         }
     }
     return 0;
@@ -74,7 +82,7 @@ void student::set_province()
 {
     string province;
     bool check = 0;
-    cout << "请输入省份（地区）：" << endl;
+    cout << "\n[INFO]请输入省份（地区）：" << endl;
     while (!check)
     {
         cin >> province;
@@ -87,7 +95,8 @@ void student::set_id()
 {
     string id;
     bool check = 0;
-    cout << "请输入身份证号码：" << endl;
+    cout << "\n[INFO]请输入身份证号码：\n"
+         << endl;
     while (!check)
     {
         cin >> id;
@@ -102,14 +111,17 @@ void student::set_id()
 
 void student::set_student_number()
 {
-    cout << "\n请输入学籍号：" << endl;
+    cout << "\n[INFO]请输入学籍号：\n"
+         << endl;
     cin >> student_number;
-    cout << "请再次输入学籍号！" << endl;
+    cout << "\n[INFO]请再次输入学籍号！\n"
+         << endl;
     string check;
     cin >> check;
     if (check != student_number)
     {
-        cout << "输入错误！请重新输入！" << endl;
+        cout << "\n[WRONG]输入错误！请重新输入！\n"
+             << endl;
         set_student_number();
     }
 }
@@ -118,7 +130,8 @@ void student::set_nation()
 {
     string nation;
     bool check = 0;
-    cout << "\n请输入民族：\n格式：XX族，如“汉族”" << endl;
+    cout << "\n[INFO]请输入民族：\n格式：XX族，如“汉族”\n"
+         << endl;
     while (!check)
     {
         cin >> nation;
@@ -130,7 +143,8 @@ void student::set_nation()
 void student::set_school_name()
 {
     string school_name;
-    cout << "\n请输入学校名称：" << endl;
+    cout << "\n[INFO]请输入学校名称：\n"
+         << endl;
     while (cin >> school_name)
     {
         if (school_name.length() < 45)
@@ -140,7 +154,8 @@ void student::set_school_name()
         }
         else
         {
-            cout << "学校名称过长！请重新输入！" << endl;
+            cout << "\n[WRONG]学校名称过长！请重新输入！\n"
+                 << endl;
         }
     }
     strcpy_s(this->school_name, school_name.c_str());
@@ -148,29 +163,36 @@ void student::set_school_name()
 
 void student::set_political_status()
 {
-    int num = 0;
+    string num;
     //政治面貌
     const char *p[] = {"中共党员", "中共预备党员", "共青团员", "民革党员", "民盟盟员", "民建会员", "民进会员", "农工党党员", "致公党党员", "九三学社社员", "台盟盟员", "无党派人士", "群众"};
-    cout << "\n请输入政治面貌：\n1.中共党员\t2.中共预备党员\t3.共青团员\t4.民革党员\n5.民盟盟员\t6.民建会员\t7.民进会员\t8.农工党党员\n9.致公党党员\t10.九三学社社员\t11.台盟盟员\t12.无党派人士\t13.群众\n";
-    while (cin >> num)
+    cout << "\n[INFO]请输入政治面貌：\n\n1.中共党员\t2.中共预备党员\t3.共青团员\t4.民革党员\n\n5.民盟盟员\t6.民建会员\t7.民进会员\t8.农工党党员\n\n9.致公党党员\t10.九三学社社员\t11.台盟盟员\t12.无党派人士\t13.群众\n"
+         << endl;
+    while (1)
     {
-        if (num > 0 && num < 14)
+        cin >> num;
+        int n = choice_check(num, 1, 13);
+        if (n == -1)
         {
-            strcpy_s(political_status, p[num - 1]);
-            break;
+            pause();
+            cin.ignore(1024, '\n');
+            continue;
         }
-        else
-            cout << "输入错误，请重新输入：" << endl;
+        strcpy_s(political_status, p[n - 1]);
+        break;
     }
 }
 
 void student::set_basic_info()
 {
-    int select;
-    cout << "\n请输入想要更改的信息：\n1.学校名称\n2.民族\n3.政治面貌\n4.高考省份\n5.学籍号\n6.身份证\n7.显示目前信息\n0.退出" << endl;
-    while (cin >> select)
+    string choice;
+    while (1)
     {
-        switch (select)
+        cout << "\n[INFO]请输入想要更改的信息：\n1.学校名称\n2.民族\n3.政治面貌\n4.高考省份\n5.学籍号\n6.身份证\n7.显示目前信息\n0.退出\n"
+             << endl;
+        cin >> choice;
+        int c = choice_check(choice, 0, 7);
+        switch (c)
         {
         case 1:
             set_school_name();
@@ -199,30 +221,34 @@ void student::set_basic_info()
             write(1);
             return;
         default:
-            cout << "输入错误，请重新输入" << endl;
-            break;
+            pause();
+            cin.ignore(1024, '\n');
+            continue;
         }
-        cout << "\n请输入想要更改的信息：\n1.学校名称\n2.民族\n3.政治面貌\n4.高考省份\n5.学籍号\n6.身份证\n7.显示目前信息\n0.退出\n"
-             << endl;
     }
 }
 
 void student::set_parents_info()
 {
-    cout << "\n请选择需要填写的信息：\n"
-         << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
-         << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回" << endl;
-    int choice;
-    while (cin >> choice)
+
+    string choice;
+    while (1)
     {
-        switch (choice)
+        cout << "\n[INFO]\n请选择需要填写的信息：\n"
+             << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
+             << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回" << endl;
+        cin >> choice;
+        int c = choice_check(choice, 0, 9);
+        switch (c)
         {
         case 1:
-            cout << "请输入父亲姓名：" << endl;
+            cout << "\n[INFO]请输入父亲姓名：\n"
+                 << endl;
             cin >> dad_name;
             break;
         case 2:
-            cout << "请输入母亲姓名：" << endl;
+            cout << "\n[INFO]请输入母亲姓名：\n"
+                 << endl;
             cin >> mom_name;
             break;
         case 3:
@@ -232,19 +258,23 @@ void student::set_parents_info()
             strcpy_s(mom_phone_number, set_phone_number().c_str());
             break;
         case 5:
-            cout << "请输入父亲工作地址：" << endl;
+            cout << "\n[INFO]请输入父亲工作地址：\n"
+                 << endl;
             cin >> dad_work_address;
             break;
         case 6:
-            cout << "请输入母亲工作地址：" << endl;
+            cout << "\n[INFO]请输入母亲工作地址：\n"
+                 << endl;
             cin >> mom_work_address;
             break;
         case 7:
-            cout << "请输入父亲职业：" << endl;
+            cout << "\n[INFO]请输入父亲职业：\n"
+                 << endl;
             cin >> dad_job;
             break;
         case 8:
-            cout << "请输入母亲职业：" << endl;
+            cout << "\n[INFO]请输入母亲职业：\n"
+                 << endl;
             cin >> mom_job;
             break;
         case 9:
@@ -256,32 +286,30 @@ void student::set_parents_info()
             cls();
             return;
         default:
-            cout << "\n输入错误！请重新输入！" << endl;
-            break;
+            pause();
+            cin.ignore(1024, '\n');
+            continue;
         }
-        cout << "\n请选择需要填写的信息：\n"
-             << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
-             << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回"
-             << endl;
     }
 }
 
 void student::set_experience()
 {
     string choice;
-    const char *c[] = {"\n请输入你的中学经历：（回车结束输入，用空格隔开不同的项目）\n格式如下：\n学校名称\t阶段\t入学时间-毕业/转校时间\t，担任职务/获得奖项\nXXXX中学，初中/，20XX-20XX，班长，三好学生，学习之星\nXXXX学校,高中，20XX-20XX，班长，三好学生，学习之星\n请不要超过500字！！！\n"};
+    const string p = "\n请输入你的中学经历：（回车结束输入，用空格隔开不同的项目）\n格式如下：\n学校名称\t阶段\t入学时间-毕业/转校时间\t，担任职务/获得奖项\nXXXX中学，初中/，20XX-20XX，班长，三好学生，学习之星\nXXXX学校,高中，20XX-20XX，班长，三好学生，学习之星\n请不要超过500字！！！\n";
     while (1)
     {
         cout << "\n请选择需要进行的操作：\n"
              << "1.填写经历\t2.查看经历\t3.删除/修改经历\t"
              << "0.返回" << endl;
         cin >> choice;
-        if (choice_check(choice, 0, 3))
+        int c = choice_check(choice, 0, 3);
+        if (c == -1)
         {
             pause();
             continue;
         }
-        switch (stoi(choice))
+        switch (c)
         {
         case 1:
         {
@@ -300,7 +328,7 @@ void student::set_experience()
                     pause();
                     break;
                 }
-                cout << *c << "\n**目前已输入条目数量：" << size << endl;
+                cout << p << "\n**目前已输入条目数量：" << size << endl;
                 getline(cin, s);
                 if (s == "0")
                 {
@@ -328,35 +356,35 @@ void student::set_experience()
                 cout << "请输入需要操作的序号（输入0退出）：" << endl;
                 string index, select;
                 cin >> index;
-                if (choice_check(index, 0, 6))
+                int i = choice_check(index, 0, 6);
+                if (i == -1)
                 {
                     pause();
                     continue;
                 }
-                int i = stoi(index);
                 if (i == 0)
                     break;
                 else
                 {
                     cout << "\n删除请输入1，修改请输入2：" << endl;
                     cin >> select;
-                    if (choice_check(select, 1, 2))
+                    int s = choice_check(select, 1, 2);
+                    if (s == -1)
                     {
                         pause();
                         continue;
                     }
-                    int sel = stoi(select);
-                    if (sel == 1)
+                    if (s == 1)
                         strcpy_s(experience[i - 1], "");
                     else
                     {
                         cls();
                         cout << "请输入新的经历:\n"
-                             << *c << endl;
-                        string s;
+                             << p << endl;
+                        string exp;
                         cin.ignore();
-                        getline(cin, s);
-                        strcpy_s(experience[i - 1], s.c_str());
+                        getline(cin, exp);
+                        strcpy_s(experience[i - 1], exp.c_str());
                     }
                     pause();
                 }
@@ -484,13 +512,14 @@ void student::set_score()
              << "1.填写成绩\t2.查看成绩\t"
              << "0.返回" << endl;
         cin >> select;
-        if (choice_check(select, 0, 2))
+        int s = choice_check(select, 0, 2);
+        if (s == -1)
         {
             pause();
             cin.ignore(100, '\n');
             continue;
         }
-        switch (stoi(select))
+        switch (s)
         {
         case 1:
         {
@@ -502,13 +531,13 @@ void student::set_score()
                      << "1.高一上期末考\t2.高一下期末考\t3.高二上期末考\t4.高二下期末考\n"
                      << "5.高三模拟考一（校级以上）\t6.高三模拟考二（校级以上）\t7.高三模拟考三（校级以上）\t8.学业水平考试\t9.高考\n0.返回" << endl;
                 cin >> choice;
-                if (choice_check(choice, 0, 9))
+                int c = choice_check(choice, 0, 9);
+                if (c == -1)
                 {
                     pause();
                     cin.ignore(100, '\n');
                     continue;
                 }
-                int c = stoi(choice);
                 if (c == 0)
                 {
                     cls();
@@ -610,16 +639,19 @@ bool student::read(char key[], int choice)
     case 1: //用作登录时同时检查密码
     {
         string pass;
-        cout << "\n请输入密码：" << endl;
+        cout << "\n[INFO]请输入密码：\n"
+             << endl;
         while (cin >> pass)
         {
             if (strcmp(base64_encode(pass).c_str(), r.password) == 0)
             {
-                cout << "\n登录成功！" << endl;
+                cout << "\n[SUCCESS]登录成功！\n"
+                     << endl;
                 this->cpy_info(r); //读取信息
                 break;
             }
-            cout << "\n密码错误，请重新输入：" << endl;
+            cout << "\n[WRONG]密码错误，请重新输入：\n"
+                 << endl;
         }
         break;
     }

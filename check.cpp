@@ -7,7 +7,7 @@ bool id_check(string id)
 {
     if (id.length() != 18)
     {
-        cout << "身份证号码长度不符合要求，请重新输入：";
+        cout << "\n[WRONG]身份证号码长度不符合要求，请重新输入：";
         return 0;
     }
     string map = "10X98765432";
@@ -16,7 +16,7 @@ bool id_check(string id)
         ans += (id[i] - '0') * arr[i];
     if (id[17] != map[ans % 11])
     {
-        cout << "该身份证号码不合法，请检查是否输入错误！" << endl;
+        cout << "\n[WRONG]该身份证号码不合法，请检查是否输入错误！" << endl;
         return 0;
     }
     return 1;
@@ -27,15 +27,15 @@ bool password_check(string password)
 {
     if (password.length() > 16 || password.length() < 6||password.find(" ") != string::npos || password.find("\n") != string::npos || password.find("\t") != string::npos || password.find("\r") != string::npos)
     {
-        cout << "密码长度需要在6~16位，\n密码不能包含以下字符：空格、回车、换行、制表符!\n请重新输入："<<endl;
+        cout << "\n[WRONG]密码长度需要在6~16位，\n密码不能包含以下字符：空格、回车、换行、制表符!\n请重新输入："<<endl;
         return 0;
     }
-    cout<<"请再次确认密码：";
+    cout<<"\n[INFO]请再次确认密码：";
     string password2;
     cin >> password2;
     if (password != password2)
     {
-        cout << "两次输入的密码不一致，请重新输入：";
+        cout << "\n[WRONG]两次输入的密码不一致，请重新输入：";
         return 0;
     }
     return 1;
@@ -75,23 +75,25 @@ bool nation_check(string nation)
     for (int i = 0; i < 56; i++)
         if (nation == p[i])
             return 1;
-    cout<<"请输入正确的民族！"<<endl;
+    cout<<"\n[WRONG]请输入正确的民族！"<<endl;
     return 0;
 }
 
-bool choice_check(string s, int min, int max)
+int choice_check(string s, int min, int max)
 {
+    int k;
     try
     {
-        int k = stoi(s);//当选项s不为数字时，抛出异常
+        k = stoi(s);//当选项s不为数字时，抛出异常
         if (k < min || k > max)//当选项s不在范围内时，抛出异常
             throw k;
     }
     catch (...)
     {
-        cout <<"\n请重新输入正确的选项！\n"
+        cout <<"\n[WRONG]请重新输入正确的选项！\n"
              << endl;
-        return 1;
+        system("pause");
+        return -1;
     }
-    return 0;
+    return k;
 }

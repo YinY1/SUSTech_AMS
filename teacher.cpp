@@ -101,21 +101,21 @@ void teacher::admit()
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_id() == vs[count - 1].get_id())
+            if (ts.get_phone() == vs[count - 1].get_phone())
             {
                 while (1)
                 {
                     if (ukey_check())
                     {
                         s.set_is_admitted(a_flag); // 0为未审批，1为通过，2为未通过
+                        f.seekp(-long(sizeof(student)), ios::cur);
+                        f.write((char *)&s, sizeof(student));
                         pause();
                         break;
                     }
                     else
                         cout << "wrong" << endl;
                 }
-                f.seekp(-long(sizeof(student)), ios::cur);
-                f.write((char *)&s, sizeof(student));
                 break;
             }
         }

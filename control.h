@@ -1,7 +1,7 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include <iomanip>
+#include <string>
 #include <windows.h>
 inline void cls()
 {
@@ -15,5 +15,8 @@ inline void sleep()
 {
     Sleep(500);
 }
+
+void gotoxy(HANDLE, int, int);
+void middle(std::string, int);
 
 #endif

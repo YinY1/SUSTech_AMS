@@ -8,7 +8,7 @@ using namespace std;
 string user::set_phone_number()
 {
     string num;
-    cout << "请输入手机号码：输入0返回" << endl;
+    cout << "\n[INFO]请输入手机号码：输入0返回\n" << endl;
     while (1)
     {
         cin >> num;
@@ -22,7 +22,7 @@ string user::set_phone_number()
 void user::set_name()
 {
     string name;
-    cout << "请输入姓名：" << endl;
+    cout << "\n[INFO]请输入姓名：\n" << endl;
     while (cin >> name)
     {
         if (name.length() < 45)
@@ -31,7 +31,7 @@ void user::set_name()
             break;
         }
         else
-            cout << "姓名过长，请重新输入：" << endl;
+            cout << "\n[WRONG]姓名过长，请重新输入：\n" << endl;
     }
 }
 
@@ -39,7 +39,7 @@ void user::set_password()
 {
     string password;
     bool check = 0;
-    cout << "请输入密码：" << endl;
+    cout << "\n[INFO]请输入密码：\n" << endl;
     while (!check)
     {
         cin>>password;
