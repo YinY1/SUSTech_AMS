@@ -36,7 +36,6 @@ int main()
             break;
         case 2:
             admin_login();
-            pause();
             break;
         case 3:
             stu_login();
@@ -52,7 +51,7 @@ int main()
             pause();
             break;
         case 0:
-            cout << "欢迎再次使用:D" << endl;
+            middle("欢迎再次使用:D", 10);
             sleep();
             exit(0);
         default:
@@ -76,7 +75,7 @@ void stu_login()
             middle(s, 2);
             middle("-----------------------", 3);
             cout << "\n[INFO]请按照提示输入选项\n\n"
-                 << "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.填写个人经历\n\n4.填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
+                 << "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.查看\\填写个人经历\n\n4.查看\\填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
             string choice;
             cin >> choice;
             int c = choice_check(choice, 0, 7);
@@ -96,7 +95,6 @@ void stu_login()
                 stu.set_experience();
                 break;
             case 4:
-                stu.display(4);
                 stu.set_score();
                 break;
             case 5:
@@ -121,7 +119,6 @@ void stu_login()
             cout << "\n\n[INFO]已成功登出！\n"
                  << endl;
         }
-        cout << "\n[INFO]返回菜单ing" << endl;
         sleep();
         cls();
     }
@@ -155,17 +152,17 @@ void tea_login()
         {
             cls();
             string s = " 欢迎您," + t.get_name() + "老师!";
-            middle("-----------------------", 1);
-            middle(s, 2);
-            middle("-----------------------", 3);
-            cout << "\n[INFO]请按照提示输入选项\n\n"
-                 << "1.按姓名查找\n\n2.按学籍号查找\n\n3.按分数段查找\n\n"
-                 << "4.列出已录取的学生\n\n5.列出未录取的学生\n\n"
-                 << "6.按姓名排序\n\n7.按成绩排序\n\n8.按省份排序\n\n"
-                 << "9.进行录取审核\n\n0.退出\n"
-                 << endl;
+            middle("-----------------------", 0);
+            middle(s, 1);
+            middle("-----------------------", 2);
+            cout << "[INFO]请按照提示输入选项\n\n"
+                 << "1.按姓名查找\n\n2.按学籍号查找\n\n3.按学校代码查找\n\n4.按出生时间段查找\n\n5.按分数段查找\n\n"
+                 << "6.列出已录取的学生\n\n7.列出未录取的学生\n\n"
+                 << "8.按姓名排序\n\n9.按成绩排序\n\n10.按省份排序\n\n11.按年龄排序\n\n"
+                 << "12.进行录取审核\n0.退出" << endl;
             cin >> choice;
-            int c = choice_check(choice, 0, 9);
+            int c = choice_check(choice, 0, 12);
+            cls();
             switch (c)
             {
             case 1:
@@ -173,22 +170,26 @@ void tea_login()
             case 3:
             case 4:
             case 5:
+            case 6:
+            case 7:
                 t.display(c);
                 pause();
                 break;
-            case 6:
-            case 7:
             case 8:
+            case 9:
+            case 10:
+            case 11:
             {
-                vector<student> vs = t._sort(c - 5);
+                vector<student> vs = t._sort(c - 7);
                 for (auto i : vs)
                     cout << "\n"
-                         << i.get_name() << "\t生源： " << i.get_province() << "\t总分 " << i.get_score() << endl;
-                cout << "\n共有 " << vs.size() << " 个学生" << endl;
+                         << i.get_name() << "\n  生源： " << i.get_province() << "\n  总分 " << i.get_score() << "\n 出生日期:" << i.get_birthday() << endl;
+                cout << "\n\n[INFO]共有 " << vs.size() << " 个学生\n"
+                     << endl;
                 pause();
                 break;
             }
-            case 9:
+            case 12:
                 t.admit();
                 pause();
                 break;
@@ -220,10 +221,12 @@ void admin_login()
                  << "2.display teacher(s) info in id order\n"
                  << "3.initialize students data\n"
                  << "4.initialize teachers data\n"
-                 << "5.register teachers accounts, 0.exit" << endl;
+                 << "5.register teachers accounts\n"
+                 << "0.exit" << endl;
             string choice;
             cin >> choice;
             int c = choice_check(choice, 0, 5);
+            cls();
             switch (c)
             {
             case 1:
@@ -251,7 +254,6 @@ void admin_login()
                 {
                     teacher t;
                     t.signup();
-                    pause();
                 }
                 else
                     cout << "ukey error" << endl;

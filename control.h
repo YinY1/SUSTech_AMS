@@ -16,7 +16,6 @@ inline void sleep()
     Sleep(500);
 }
 
-void gotoxy(HANDLE, int, int);
 void middle(std::string, int);
 
 #endif

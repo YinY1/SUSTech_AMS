@@ -1,4 +1,4 @@
-#include"check.h"
+#include "check.h"
 #include <iostream>
 
 using namespace std;
@@ -20,17 +20,16 @@ bool id_check(string id)
         return 0;
     }
     return 1;
-    // test_id:34052419800101001X
 }
 
 bool password_check(string password)
 {
-    if (password.length() > 16 || password.length() < 6||password.find(" ") != string::npos || password.find("\n") != string::npos || password.find("\t") != string::npos || password.find("\r") != string::npos)
+    if (password.length() > 16 || password.length() < 6 || password.find(" ") != string::npos || password.find("\n") != string::npos || password.find("\t") != string::npos || password.find("\r") != string::npos)
     {
-        cout << "\n[WRONG]密码长度需要在6~16位，\n密码不能包含以下字符：空格、回车、换行、制表符!\n请重新输入："<<endl;
+        cout << "\n[WRONG]密码长度需要在6~16位，\n密码不能包含以下字符：空格、回车、换行、制表符!\n请重新输入：" << endl;
         return 0;
     }
-    cout<<"\n[INFO]请再次确认密码：";
+    cout << "\n[INFO]请再次确认密码：";
     string password2;
     cin >> password2;
     if (password != password2)
@@ -47,7 +46,7 @@ bool province_check(string province)
     for (int i = 0; i < 34; i++)
         if (province == p[i])
             return 1;
-    cout << "请输入正确的省市！" << endl;
+    cout << "\n[WRONG]请输入正确的省市！" << endl;
     return 0;
 }
 
@@ -61,21 +60,72 @@ bool phone_check(string num)
     }
     catch (...)
     {
-        cout << "请输入正确的电话号码！输入0退出" << endl;
+        cout << "\n[WRONG]请输入正确的电话号码！输入0退出\n"
+             << endl;
         cin.ignore(1024, '\n');
         return 0;
     }
     return 1;
-}//test num:18688888888
+} // test num:18688888888
 
 bool nation_check(string nation)
 {
     //民族
-    const char *p[]={"汉族","蒙古族","回族","藏族","维吾尔族","苗族","彝族","壮族","布依族","朝鲜族","满族","侗族","瑶族","白族","土家族","哈尼族","哈萨克族","傣族","黎族","傈僳族","佤族","畲族","高山族","拉祜族","水族","东乡族","纳西族","景颇族","柯尔克孜族","土族","达斡尔族","仫佬族","羌族","布朗族","撒拉族","毛南族","仡佬族","锡伯族","阿昌族","普米族","塔吉克族","怒族","乌孜别克族","俄罗斯族","鄂温克族","德昂族","保安族","裕固族","京族","塔塔尔族","独龙族","鄂伦春族","赫哲族","门巴族","珞巴族","基诺族"};
+    const char *p[] = {"汉族", "蒙古族", "回族", "藏族", "维吾尔族", "苗族", "彝族", "壮族", "布依族", "朝鲜族", "满族", "侗族", "瑶族", "白族", "土家族", "哈尼族", "哈萨克族", "傣族", "黎族", "傈僳族", "佤族", "畲族", "高山族", "拉祜族", "水族", "东乡族", "纳西族", "景颇族", "柯尔克孜族", "土族", "达斡尔族", "仫佬族", "羌族", "布朗族", "撒拉族", "毛南族", "仡佬族", "锡伯族", "阿昌族", "普米族", "塔吉克族", "怒族", "乌孜别克族", "俄罗斯族", "鄂温克族", "德昂族", "保安族", "裕固族", "京族", "塔塔尔族", "独龙族", "鄂伦春族", "赫哲族", "门巴族", "珞巴族", "基诺族"};
     for (int i = 0; i < 56; i++)
         if (nation == p[i])
             return 1;
-    cout<<"\n[WRONG]请输入正确的民族！"<<endl;
+    cout << "\n[WRONG]请输入正确的民族！输入0退出\n"
+         << endl;
+    return 0;
+}
+
+bool date_check(string d) //日期合法检查
+{
+    try
+    {
+        if (d.size() != 8)
+            throw d;
+        int year = stoi(d.substr(0, 4));
+        int month = stoi(d.substr(4, 2));
+        int day = stoi(d.substr(6, 2));
+        //检查包括闰年的日期
+        if (month == 2)
+        {
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+            {
+                if (day > 29)
+                    throw d;
+                else if (day > 28)
+                    throw d;
+            }
+        }
+        else if (month == 4 || month == 6 || month == 9 || month == 11)
+        {
+            if (day > 30)
+                throw d;
+        }
+        else if (day > 31)
+            throw d;
+    }
+    catch (...)
+    {
+        cout << "\n[WRONG]请输入正确的日期！输入0退出\n"
+             << endl;
+        return 0;
+    }
+    return 1;
+}
+
+bool email_check(string s)
+{
+    //邮箱合法检查
+    const char *p[] = {"@qq.com", "@163.com", "@126.com", "@sina.com", "@gmail.com", "@hotmail.com", "@sohu.com", "@139.com", "@189.com", "@wo.com.cn", "@21cn.com", "@tom.com", "@yahoo.com", "@live.com", "@msn.com", "@foxmail.com", "@yeah.net", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.163.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com"};
+    for (int i = 0; i < 63; i++)
+        if (s.find(p[i]) != string::npos)
+            return 1;
+    cout << "\n[WRONG]请输入正确的邮箱！输入0退出\n"
+         << endl;
     return 0;
 }
 
@@ -84,15 +134,16 @@ int choice_check(string s, int min, int max)
     int k;
     try
     {
-        k = stoi(s);//当选项s不为数字时，抛出异常
-        if (k < min || k > max)//当选项s不在范围内时，抛出异常
+        k = stoi(s);            //当选项s不为数字时，抛出异常
+        if (k < min || k > max) //当选项s不在范围内时，抛出异常
             throw k;
     }
     catch (...)
     {
-        cout <<"\n[WRONG]请重新输入正确的选项！\n"
+        cout << "\n[WRONG]请重新输入正确的选项！\n"
              << endl;
         system("pause");
+        system("cls");
         return -1;
     }
     return k;

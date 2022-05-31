@@ -5,6 +5,7 @@
 
 class student : public user
 {
+    char email[50] = {};
     char province[10] = {};
     char gender[5] = {};                    //性别
     char student_number[50] = {};           //学籍号                //省份
@@ -35,6 +36,7 @@ public:
     void rechieve_password();
     void signup();
     void display(int);
+    void set_email();
     void set_province();
     void set_security_question();
     void set_basic_info();
@@ -63,6 +65,20 @@ public:
     std::string get_province()
     {
         return province;
+    }
+    std::string get_birthday()
+    {
+        if(id[0]=='\0') return "";
+        std::string age(id,6,8);
+        return age;
+    }
+    std::string get_email()
+    {
+        return email;
+    }
+    std::string get_school_name()
+    {
+        return school_name;
     }
 };
 
