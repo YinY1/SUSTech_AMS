@@ -7,7 +7,7 @@ bool id_check(string id)
 {
     if (id.length() != 18)
     {
-        cout << "\n[WRONG]身份证号码长度不符合要求，请重新输入：";
+        cerr << "\n[WRONG]身份证号码长度不符合要求，请重新输入：";
         return 0;
     }
     string map = "10X98765432";
@@ -16,7 +16,7 @@ bool id_check(string id)
         ans += (id[i] - '0') * arr[i];
     if (id[17] != map[ans % 11])
     {
-        cout << "\n[WRONG]该身份证号码不合法，请检查是否输入错误！" << endl;
+        cerr << "\n[WRONG]该身份证号码不合法，请检查是否输入错误！" << endl;
         return 0;
     }
     return 1;
@@ -34,7 +34,7 @@ bool password_check(string password)
     cin >> password2;
     if (password != password2)
     {
-        cout << "\n[WRONG]两次输入的密码不一致，请重新输入：";
+        cerr << "\n[WRONG]两次输入的密码不一致，请重新输入：";
         return 0;
     }
     return 1;
@@ -46,7 +46,7 @@ bool province_check(string province)
     for (int i = 0; i < 34; i++)
         if (province == p[i])
             return 1;
-    cout << "\n[WRONG]请输入正确的省市！" << endl;
+    cerr << "\n[WRONG]请输入正确的省市！" << endl;
     return 0;
 }
 
@@ -60,9 +60,9 @@ bool phone_check(string num)
     }
     catch (...)
     {
-        cout << "\n[WRONG]请输入正确的电话号码！输入0退出\n"
+        cerr << "\n[WRONG]请输入正确的电话号码！输入0退出\n"
              << endl;
-        cin.ignore(1024, '\n');
+        cin.sync();
         return 0;
     }
     return 1;
@@ -75,7 +75,7 @@ bool nation_check(string nation)
     for (int i = 0; i < 56; i++)
         if (nation == p[i])
             return 1;
-    cout << "\n[WRONG]请输入正确的民族！输入0退出\n"
+    cerr << "\n[WRONG]请输入正确的民族！输入0退出\n"
          << endl;
     return 0;
 }
@@ -110,7 +110,7 @@ bool date_check(string d) //日期合法检查
     }
     catch (...)
     {
-        cout << "\n[WRONG]请输入正确的日期！输入0退出\n"
+        cerr << "\n[WRONG]请输入正确的日期！输入0退出\n"
              << endl;
         return 0;
     }
@@ -124,23 +124,29 @@ bool email_check(string s)
     for (int i = 0; i < 63; i++)
         if (s.find(p[i]) != string::npos)
             return 1;
-    cout << "\n[WRONG]请输入正确的邮箱！输入0退出\n"
+    cerr << "\n[WRONG]请输入正确的邮箱！输入0退出\n"
          << endl;
     return 0;
 }
 
 int choice_check(string s, int min, int max)
 {
-    int k;
+    int k = -1;
     try
     {
+        if (s.empty()) //当没有输入任何东西（输入了ctrl+z）时，抛出异常
+        {
+            cin.clear();
+            cin.sync();
+            throw s;
+        }
         k = stoi(s);            //当选项s不为数字时，抛出异常
         if (k < min || k > max) //当选项s不在范围内时，抛出异常
             throw k;
     }
     catch (...)
     {
-        cout << "\n[WRONG]请重新输入正确的选项！\n"
+        cerr << "\n[WRONG]请重新输入正确的选项！\n"
              << endl;
         system("pause");
         system("cls");

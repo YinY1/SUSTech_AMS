@@ -54,7 +54,8 @@ void admin::display(int choice)
     }
     for (auto i : vt)
         cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone() << " " << base64_decode(i.get_ukey().c_str()) << endl;
-    cout << "\n" << vt.size() << " teacher(s)" << endl;
+    cout << "\n"
+         << vt.size() << " teacher(s)" << endl;
 }
 
 bool admin::login()
@@ -63,6 +64,66 @@ bool admin::login()
     string pass;
     cin >> pass;
     return pass == password;
+}
+
+void admin::admit()
+{
+    size_t num;
+    string s;
+    vector<student> vs = _sort(0);
+    while (1)
+    {
+        cls();
+        cout << "\n[INFO]total:" << vs.size() << "\n[INFO]Please enter the number of students to be admitted\n"
+             << endl;
+        cin >> num;
+        if (num == 0)
+            return;
+        if (num < 0 || num > vs.size())
+        {
+            cout << "\n[INFO]Invalid input!\n"
+                 << endl;
+            pause();
+            cin.sync();
+            continue;
+        }
+        else
+        {
+            cout << "\n[INFO]The following students will be admitted:\n"
+                 << endl;
+            for (size_t i = 0; i < num; i++)
+                cout << vs[i].get_name() << "\t\t" << vs[i].get_overall_score() << endl;
+            cout << "\n[INFO]total:" << num << "\n[INFO]Are you sure to admit them?(y/n)" << endl;
+            cin >> s;
+            if (s == "y")
+            {
+                if (ukey_check())
+                {
+                    fstream f("admit.txt", ios::out);
+                    f.seekp(0, ios::beg);
+                    for (size_t i = 0; i < num; i++)
+                        f << vs[i].get_name() <<"\t\t"<< vs[i].get_id() << endl;
+                    f.close();
+                    cout << "\n[INFO]Admission success!\n"
+                         << endl;
+                    pause();
+                    return;
+                }
+                else
+                {
+                    cout << "\n[WRONG]ukey error" << endl;
+                    pause();
+                    continue;
+                }
+            }
+            else
+            {
+                cout << "\n[INFO]Canceled!" << endl;
+                pause();
+                break;
+            }
+        }
+    }
 }
 
 void admin::stu_init()

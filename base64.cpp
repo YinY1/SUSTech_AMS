@@ -1,7 +1,7 @@
 #include "base64.h"
 #include <cstring>
 using namespace std;
-//https://zhuanlan.zhihu.com/p/103336186
+
 //https://github.com/ReneNyffenegger/cpp-base64
 
 string base64_encode(const string &bytes_to_encode)

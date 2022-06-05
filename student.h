@@ -5,8 +5,83 @@
 
 class student : public user
 {
-    char email[50] = {};
-    char province[10] = {};
+public:
+    student();
+    bool login();                    //登录
+    bool confirm_password();         //确认密码
+    bool change_password();          //修改密码
+    bool cancel_account();           //注销账号
+    bool read(char[], int);          //读取信息
+    void rechieve_password();        //找回密码
+    void signup();                   //注册
+    void display(int);               //显示信息
+    void set_email();                //设置邮箱
+    void set_province();             //设置省份
+    void set_security_question();    //设置安全问题
+    void set_basic_info();           //设置基本信息
+    void set_parents_info();         //设置家长信息
+    void set_experience();           //设置工作经历
+    void set_score();                //设置成绩
+    void set_student_number();       //设置学籍号
+    void set_nation();               //设置民族
+    void set_political_status();     //设置政治面貌
+    void set_school_name();          //设置学校名称
+    void write(int);                 //写入信息
+    void set_id();                   //设置身份证
+    void set_is_admitted(int select) //设置录取状态
+    {
+        is_admitted = select;
+    }
+    void print_admitted();          //打印录取状态
+    void cpy_info(const student &); //复制信息
+    int input_phone_number(int);    //输入手机号
+    int get_is_admitted()           //获取录取状态
+    {
+        return is_admitted;
+    }
+    float get_final_score() //获取高考成绩
+    {
+        return score[8][12];
+    }
+    float get_level_test_score() //获取等级考试成绩
+    {
+        return score[7][12];
+    }
+    void set_overall_score(float test) //设置总成绩
+    {
+        overall_score = ((score[8][12] / 7.5) * 0.6 + test * 0.3 + (score[7][12] / 6) * 0.1);
+    }
+    double get_overall_score() //获取总成绩
+    {
+        return overall_score;
+    }
+    std::string get_student_number() //获取学籍号
+    {
+        return student_number;
+    }
+    std::string get_province() //获取省份
+    {
+        return province;
+    }
+    std::string get_birthday() //获取生日
+    {
+        if (id[0] == '\0')
+            return "";
+        std::string age(id, 6, 8);
+        return age;
+    }
+    std::string get_email() //获取邮箱
+    {
+        return email;
+    }
+    std::string get_school_name() //获取学校名称
+    {
+        return school_name;
+    }
+
+private:
+    char email[50] = {};                    //邮箱
+    char province[10] = {};                 //省份
     char gender[5] = {};                    //性别
     char student_number[50] = {};           //学籍号                //省份
     char nation[10] = {};                   //民族
@@ -25,61 +100,8 @@ class student : public user
     char security_answer[25] = {};          //密保答案
     char application[5][20] = {};           //志愿
     float score[9][13] = {};                //成绩
-    int is_admitted = 0;                    //是否录取
-public:
-    student();
-    bool login();
-    bool confirm_password();
-    bool change_password();
-    bool cancel_account();
-    bool read(char[], int);
-    void rechieve_password();
-    void signup();
-    void display(int);
-    void set_email();
-    void set_province();
-    void set_security_question();
-    void set_basic_info();
-    void set_parents_info();
-    void set_experience();
-    void set_score();
-    void set_student_number();
-    void set_nation();
-    void set_political_status();
-    void set_school_name();
-    void write(int);
-    void set_id();
-    void set_is_admitted(int select) { is_admitted = select; }
-    void print_admitted();
-    void cpy_info(const student &);
-    int input_phone_number(int);
-    int get_is_admitted() { return is_admitted; }
-    float get_score() //获取高考成绩
-    {
-        return score[8][12];
-    }
-    std::string get_student_number()
-    {
-        return student_number;
-    }
-    std::string get_province()
-    {
-        return province;
-    }
-    std::string get_birthday()
-    {
-        if(id[0]=='\0') return "";
-        std::string age(id,6,8);
-        return age;
-    }
-    std::string get_email()
-    {
-        return email;
-    }
-    std::string get_school_name()
-    {
-        return school_name;
-    }
+    double overall_score = 0;               //总成绩
+    int is_admitted = 0;                    //录取状态
 };
 
 #endif

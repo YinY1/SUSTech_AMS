@@ -10,11 +10,10 @@ public:
     teacher() {}
     bool login();
     bool read(char[]);
-    void admit();
-    void signup();
+    void approval(); //审批
+    void signup();   //注册
     void display(int);
     void cpy_info(const teacher &);
-    std::vector<student> _sort(int);
 };
 
 #endif

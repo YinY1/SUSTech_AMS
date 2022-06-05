@@ -6,6 +6,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 const teacher tmark = teacher();
@@ -21,7 +22,7 @@ void teacher::signup() //只提供给管理员使用
     {
         if (phone == t.get_phone())
         {
-            cout << "\n[WRONG]The number has been registered\n"
+            cerr << "\n[WRONG]The number has been registered\n"
                  << endl;
             pause();
             return;
@@ -30,7 +31,7 @@ void teacher::signup() //只提供给管理员使用
     }
     f.seekp(-long(sizeof(teacher)), ios::cur);
     cout << "id:" << count << endl;
-    strcpy(t.id, base64_encode(to_string(count)).c_str());
+    strcpy_s(t.id, base64_encode(to_string(count)).c_str());
     set_name();
     // set_college();
     set_password();
@@ -63,13 +64,13 @@ bool teacher::login()
             return 1;
         }
         else
-            cout << "\n[WRONG]用户不存在！请重新输入账号！\t输入0返回\n"
+            cerr << "\n[WRONG]用户不存在！请重新输入账号！\t输入0返回\n"
                  << endl;
     }
     return 0;
 }
 
-void teacher::admit()
+void teacher::approval()
 {
     vector<student> vs = _sort(2);
     //从容器中删除已被审核的学生
@@ -82,13 +83,16 @@ void teacher::admit()
     }
     size_t count = 0;
     int sel;
+    string sname;
     while (count < vs.size())
     {
         cls();
+        sname = vs[count].get_name();
+        //查看学生信息
         while (1)
         {
             cout << "\n[INFO]目前还剩 " << vs.size() - count << " 位学生未审核\n"
-                 << "\n[INFO]请输入要对 " << vs[count].get_name() << " 进行的的操作：\n\n"
+                 << "\n[INFO]请输入要对 " << sname << " 进行的的操作：\n\n"
                  << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出录取操作" << endl;
             cin >> sel;
             if (sel >= 1 && sel <= 4)
@@ -101,9 +105,25 @@ void teacher::admit()
             else if (sel == 0)
                 return;
             else
-                cout << "\n[WRONG]输入错误，请重新输入\n"
+                cerr << "\n[WRONG]输入错误，请重新输入\n"
                      << endl;
         }
+        //计算成绩
+        float test_score = 0;
+        while (1)
+        {
+            cout << "\n[INFO]请输入 " << sname << " 的校测成绩：\n\n";
+            cin >> test_score;
+            if (test_score >= 0 && test_score <= 100)
+            {
+                cout << "\n[INFO]校测成绩为：" << test_score << endl;
+                break;
+            }
+            else
+                cerr << "\n[WRONG]输入错误，请重新输入\n"
+                     << endl;
+        }
+        //审批
         int a_flag;
         cout << "\n[INFO]是否通过审核？\n\n1.是 2.否\n"
              << endl;
@@ -121,6 +141,8 @@ void teacher::admit()
                     if (ukey_check())
                     {
                         s.set_is_admitted(a_flag); // 0为未审批，1为通过，2为未通过
+                        if (a_flag == 1)
+                            s.set_overall_score(test_score); //设置总成绩
                         f.seekp(-long(sizeof(student)), ios::cur);
                         f.write((char *)&s, sizeof(student));
                         pause();
@@ -165,7 +187,7 @@ bool teacher::read(char key[])
             this->cpy_info(t); //读取信息
             break;
         }
-        cout << "\n[WRONG]密码错误，请重新输入：\n"
+        cerr << "\n[WRONG]密码错误，请重新输入：\n"
              << endl;
     }
     f.close();
@@ -197,14 +219,14 @@ void teacher::display(int choice) //特定需求查找
             if (n == str)
             {
                 cout << "\n"
-                     << ts.get_name()<<"\n学籍号:"<<ts.get_student_number() << "\t\t总分 " << ts.get_score() << "\t";
+                     << ts.get_name() << "\n学籍号:" << ts.get_student_number() << "\t\t总分 " << ts.get_final_score() << "\t";
                 ts.print_admitted();
                 flag = 1;
                 break;
             }
         }
         if (!flag)
-            cout << "\n[WRONG]没有找到该学生\n"
+            cerr << "\n[WRONG]没有找到该学生\n"
                  << endl;
         break;
     }
@@ -222,16 +244,17 @@ void teacher::display(int choice) //特定需求查找
                 vs.push_back(ts);
         }
         if (vs.empty())
-            cout << "\n[WRONG]没有找到该学校的学生\n"
+            cerr << "\n[WRONG]没有找到该学校的学生\n"
                  << endl;
         sort(vs.begin(), vs.end(), [](student &a, student &b)
-             { return a.get_score() > b.get_score(); });
+             { return a.get_final_score() > b.get_final_score(); });
         cls();
-        cout<<"\n[INFO]该学校的报名学生如下\n"<<endl;
+        cout << "\n[INFO]该学校的报名学生如下\n"
+             << endl;
         for (auto i : vs)
         {
             cout << "\n"
-                 << i.get_name() << "\t\t总分 " << i.get_score() << "\t";
+                 << i.get_name() << "\t\t总分 " << i.get_final_score() << "\t";
             i.print_admitted();
         }
         break;
@@ -245,7 +268,7 @@ void teacher::display(int choice) //特定需求查找
             cout << "\n[INFO]请输入起始出生日期：(如：20220601)\n"
                  << endl;
             cin >> beg;
-            if(beg=="0")
+            if (beg == "0")
                 return;
             if (date_check(beg))
                 break;
@@ -255,7 +278,7 @@ void teacher::display(int choice) //特定需求查找
             cout << "\n[INFO]请输入结束出生日期：(如：20220602)\n"
                  << endl;
             cin >> end;
-            if(end=="0")
+            if (end == "0")
                 return;
             if (end < beg)
             {
@@ -281,7 +304,7 @@ void teacher::display(int choice) //特定需求查找
         for (auto i : vs)
         {
             cout << "\n"
-                 << i.get_name() << "\n  总分 " << i.get_score()
+                 << i.get_name() << "\n  总分 " << i.get_final_score()
                  << "\n  出生日期 " << i.get_birthday() << endl;
             i.print_admitted();
         }
@@ -297,7 +320,7 @@ void teacher::display(int choice) //特定需求查找
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_score() >= score)
+            if (ts.get_final_score() >= score)
                 vs.push_back(ts);
         }
         if (vs.size() == 0)
@@ -305,26 +328,27 @@ void teacher::display(int choice) //特定需求查找
         else
         {
             sort(vs.begin(), vs.end(), [](student &a, student &b)
-                 { return a.get_score() > b.get_score(); });
+                 { return a.get_final_score() > b.get_final_score(); });
             cls();
             for (auto i : vs)
             {
                 cout << "\n"
-                     << i.get_name() << "\t\t总分 " << i.get_score() << endl;
+                     << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
                 i.print_admitted();
             }
         }
         break;
     }
-    case 6:
-    case 7: // 列出已（未）录取的学生
+    case 6: //未审核
+    case 7: //已过审的学生
+    case 8: //未过审的学生
     {
-        const char *p[] = {"已录取", "未录取"};
+        const char *p[] = {"未审核", "已过审", "未过审"};
         vector<student> vs;
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_is_admitted() == (choice - 5))
+            if (ts.get_is_admitted() == (choice - 6))
                 vs.push_back(ts);
         }
         if (vs.empty())
@@ -332,7 +356,7 @@ void teacher::display(int choice) //特定需求查找
         else
         {
             sort(vs.begin(), vs.end(), [](student &a, student &b)
-                 { return a.get_score() > b.get_score(); }); //按分数高低排序
+                 { return a.get_final_score() > b.get_final_score(); }); //按分数高低排序
             cls();
             cout << "\n\n"
                  << p[choice - 6] << "的学生如下：\n"
@@ -340,7 +364,7 @@ void teacher::display(int choice) //特定需求查找
             for (auto i : vs)
             {
                 cout << "\n"
-                     << i.get_name() << "\t\t总分 " << i.get_score() << endl;
+                     << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
                 i.print_admitted();
             }
         }
@@ -348,49 +372,6 @@ void teacher::display(int choice) //特定需求查找
     }
     }
     f.close();
-}
-
-vector<student> teacher::_sort(int choice) //排序
-{
-    vector<student> vs;
-    student s, ts;
-    fstream f("stu.dat", ios::in | ios::binary);
-    f.seekg(0, ios::beg);
-    while (f.read((char *)&s, sizeof(student)) && !endmark(s))
-    {
-        ts.cpy_info(s);
-        vs.push_back(ts);
-    }
-    f.close();
-    if (vs.empty())
-    {
-        cout << "\n[INFO]暂无学生数据！" << endl;
-        return vs;
-    }
-    //"排序模式：1.按姓名 2.按成绩(仅能在这里admit) 3.按省份 0.退出"<<endl;
-    switch (choice)
-    {
-    case 1:
-        // sort会调用=进行swap,所以不要随意重载=
-        sort(vs.begin(), vs.end(), [](student &a, student &b)
-             { return a.get_name() < b.get_name(); }); // lambda表达式
-        break;
-    case 2:
-        sort(vs.begin(), vs.end(), [](student &a, student &b)
-             { return a.get_score() > b.get_score(); });
-        break;
-    case 3: //按省份排序
-        sort(vs.begin(), vs.end(), [](student &a, student &b)
-             { return a.get_province() < b.get_province(); });
-        break;
-    case 4: //按年龄排序
-        sort(vs.begin(), vs.end(), [](student &a, student &b)
-             { return a.get_birthday() < b.get_birthday(); });
-        break;
-    default:
-        return vs;
-    }
-    return vs;
 }
 
 void teacher::cpy_info(const teacher &t) //登录后读取教师信息

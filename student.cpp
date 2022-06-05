@@ -29,7 +29,7 @@ void student::signup()
         return;
     if (read(phone_number, 0))
     {
-        cout << "\n[WRONG]用户已存在！\n"
+        cerr << "\n[WRONG]用户已存在！\n"
              << endl;
         return;
     }
@@ -63,7 +63,7 @@ bool student::login()
             cls();
             return 1;
         case -1:
-            cout << "\n[WRONG]用户不存在！请重新输入账号！\t输入0返回" << endl;
+            cerr << "\n[WRONG]用户不存在！请重新输入账号！\t输入0返回" << endl;
         }
     }
     return 0;
@@ -154,7 +154,7 @@ void student::set_school_name()
         }
         else
         {
-            cout << "\n[WRONG]学校名称过长！请重新输入！\n"
+            cerr << "\n[WRONG]学校名称过长！请重新输入！\n"
                  << endl;
         }
     }
@@ -175,7 +175,7 @@ void student::set_political_status()
         if (n == -1)
         {
             pause();
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
         strcpy_s(political_status, p[n - 1]);
@@ -225,7 +225,7 @@ void student::set_basic_info()
             return;
         default:
             pause();
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
     }
@@ -290,7 +290,7 @@ void student::set_parents_info()
             return;
         default:
             pause();
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
     }
@@ -309,7 +309,7 @@ void student::set_experience()
         int c = choice_check(choice, 0, 3);
         if (c == -1)
         {
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
         switch (c)
@@ -339,7 +339,7 @@ void student::set_experience()
                     int s = choice_check(select, 1, 2);
                     if (s == -1)
                     {
-                        cin.ignore(1024, '\n');
+                        cin.sync();
                         continue;
                     }
                     if (s == 1)
@@ -378,7 +378,7 @@ void student::set_experience()
             sleep();
             return;
         default:
-            cout << "\n[WRONG]输入错误，请重新输入：" << endl;
+            cerr << "\n[WRONG]输入错误，请重新输入：" << endl;
             break;
         }
     }
@@ -407,7 +407,7 @@ void student::set_security_question()
             break;
         }
         else
-            cout << "\n[WRONG]密保问题过长，请重新输入：" << endl;
+            cerr << "\n[WRONG]密保问题过长，请重新输入：" << endl;
     }
     cout << "\n[INFO]请输入你想设置的密保答案(10汉字/20英文字符以内)：\n\n输入0返回" << endl;
     while (1)
@@ -424,7 +424,7 @@ void student::set_security_question()
             break;
         }
         else
-            cout << "\n[WRONG]密保答案过长，请重新输入：" << endl;
+            cerr << "\n[WRONG]密保答案过长，请重新输入：" << endl;
     }
     cls();
     cout << "\n[INFO]设置完成！您的密保为：\n"
@@ -445,7 +445,7 @@ void student::rechieve_password()
         {
         case -1:
             cls();
-            cout << "\n[WRONG]用户不存在！" << endl;
+            cerr << "\n[WRONG]用户不存在！" << endl;
             break;
         case 0:
             cls();
@@ -477,7 +477,7 @@ void student::rechieve_password()
             break;
         }
         else
-            cout << "\n[WRONG]密保答案错误，请重新输入：\n"
+            cerr << "\n[WRONG]密保答案错误，请重新输入：\n"
                  << endl;
     }
     cout << "\n[SUCCESS]密码修改成功！\n"
@@ -499,7 +499,7 @@ void student::set_score()
         if (s == -1)
         {
             pause();
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
         switch (s)
@@ -528,16 +528,51 @@ void student::set_score()
                     break;
                 }
                 const char *p[] = {"语文", "数学", "外语", "物理", "化学", "生物", "地理", "政治", "历史", "技术", "年级排名", "年级总人数"};
-                cout << "请输入你的成绩，没有的请填0（150分制）：\n"
-                     << "请输入 " << test[c - 1] << " 成绩：" << endl;
+                if (c == 8)
+                    cout << "\n[INFO]等级A输入100，等级B输入80，等级C输入60，等级D输入40，等级E/(无等级)输入0\n";
+                else
+                    cout << "\n[INFO]请输入你的成绩，没有的请填0（总分750分制）：\n";
+                cout << "请输入 " << test[c - 1] << " 成绩：" << endl;
                 score[c - 1][12] = 0;
-                for (int i = 0; i < 12; i++)
+                if (c == 8)//学业水平考试另外计算
                 {
-                    cout << "\n"
-                         << p[i] << "\t";
-                    cin >> score[c - 1][i];
-                    if (i < 10)
-                        score[c - 1][12] += score[c - 1][i]; //总分
+                    for (int i = 3; i <= 8; i++)
+                    {
+                        int temp;
+                        cout << "\n"
+                             << p[i] << "\t";
+                        cin >> temp;
+                        if (temp != 100 && temp != 80 && temp != 60 && temp != 40 && temp != 0)
+                        {
+                            cerr << "\n[WRONG]输入错误，请重新输入：\n"
+                                 << endl;
+                            i--;
+                            continue;
+                        }
+                        score[c - 1][i] = temp;
+                        score[c - 1][12] += temp;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 12; i++)
+                    {
+                        if(c==9&&i>9)//高考成绩不需要看年级排名，剔除
+                            break;
+                        cout << "\n"
+                             << p[i] << "\t";
+                        cin >> score[c - 1][i];
+                        if (i < 10)
+                            score[c - 1][12] += score[c - 1][i]; //计算总分
+                        if (score[c - 1][12] > 750)
+                        {
+                            cerr << "\n[WRONG]你的总分超过了750分，请检查输入！\n"
+                                 << endl;
+                            pause();
+                            score[c - 1][12] = 0;
+                            break;
+                        }
+                    }
                 }
                 cout << "\n\n[INFO]输入完成！" << endl;
                 pause();
@@ -604,7 +639,7 @@ void student::display(int choice)
         int c = choice_check(s, 0, 9);
         if (c == -1)
         {
-            cin.ignore(1024, '\n');
+            cin.sync();
             return;
         }
         if (c == 0)
@@ -614,7 +649,7 @@ void student::display(int choice)
         }
         const char *p[] = {"语文", "数学", "外语", "物理", "化学", "生物", "地理", "政治", "历史", "技术", "年级排名", "年级总人数", "总分"};
         for (int i = 0; i < 13; i++)
-            cout <<setiosflags(ios::left)<< setw(10) << p[i] << score[c - 1][i] << endl;
+            cout << setiosflags(ios::left) << setw(10) << p[i] << score[c - 1][i] << endl;
         break;
     }
     }
@@ -653,7 +688,7 @@ bool student::read(char key[], int choice)
                 this->cpy_info(r); //读取信息
                 break;
             }
-            cout << "\n[WRONG]密码错误，请重新输入：\n"
+            cerr << "\n[WRONG]密码错误，请重新输入：\n"
                  << endl;
         }
         break;
@@ -792,7 +827,7 @@ bool student::confirm_password()
                 return 1;
         }
         else
-            cout << "\n[WRONG]密码错误！请重新输入！输入0返回\n"
+            cerr << "\n[WRONG]密码错误！请重新输入！输入0返回\n"
                  << endl;
     }
     return 0;
@@ -839,7 +874,7 @@ bool student::cancel_account()
     cout << "\n已取消" << endl;
     pause();
     cls();
-    cin.ignore(1024, '\n');
+    cin.sync();
     return 0;
 }
 
@@ -880,4 +915,5 @@ void student::cpy_info(const student &r)
         for (int j = 0; j < 13; j++)
             score[i][j] = r.score[i][j];
     }
+    overall_score=r.overall_score;
 }

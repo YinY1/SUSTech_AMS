@@ -16,6 +16,6 @@ inline void sleep()
     Sleep(500);
 }
 
-void middle(std::string, int);
+void middle(std::string, int);  //中间显示
 
 #endif

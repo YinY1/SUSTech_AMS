@@ -5,6 +5,7 @@
 #include "teacher.h"
 #include <fstream>
 #include <iostream>
+
 using namespace std;
 
 void stu_signup();
@@ -55,7 +56,7 @@ int main()
             sleep();
             exit(0);
         default:
-            cin.ignore(1024, '\n');
+            cin.sync();
             continue;
         }
     }
@@ -67,16 +68,16 @@ void stu_login()
     if (stu.login())
     {
         bool flag = 1;
+        string choice,s;
         while (flag)
         {
             cls();
-            string s = " 欢迎您," + stu.get_name() + "同学!";
+            s = " 欢迎您," + stu.get_name() + "同学!";
             middle("-----------------------", 1);
             middle(s, 2);
             middle("-----------------------", 3);
             cout << "\n[INFO]请按照提示输入选项\n\n"
                  << "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.查看\\填写个人经历\n\n4.查看\\填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
-            string choice;
             cin >> choice;
             int c = choice_check(choice, 0, 7);
             cls();
@@ -112,7 +113,7 @@ void stu_login()
                 flag = 0;
                 break;
             default:
-                cin.ignore(1024, '\n');
+                cin.sync();
                 continue;
             }
             cls();
@@ -147,21 +148,21 @@ void tea_login()
     teacher t;
     if (t.login())
     {
-        string choice;
+        string choice,s;
         while (1)
         {
             cls();
-            string s = " 欢迎您," + t.get_name() + "老师!";
+            s = " 欢迎您," + t.get_name() + "老师!";
             middle("-----------------------", 0);
             middle(s, 1);
             middle("-----------------------", 2);
             cout << "[INFO]请按照提示输入选项\n\n"
-                 << "1.按姓名查找\n\n2.按学籍号查找\n\n3.按学校代码查找\n\n4.按出生时间段查找\n\n5.按分数段查找\n\n"
-                 << "6.列出已录取的学生\n\n7.列出未录取的学生\n\n"
-                 << "8.按姓名排序\n\n9.按成绩排序\n\n10.按省份排序\n\n11.按年龄排序\n\n"
-                 << "12.进行录取审核\n0.退出" << endl;
+                 << "1.按姓名查找\n2.按学籍号查找\n3.按学校代码查找\n4.按出生时间段查找\n5.按分数段查找\n\n"
+                 << "6.列出还未审核的学生\n7.列出已过审的学生\n8.列出未过审的学生\n\n"
+                 << "8.按姓名排序\n10.按成绩排序\n11.按省份排序\n12.按年龄排序\n\n"
+                 << "13.进行录取审核\n\n0.退出" << endl;
             cin >> choice;
-            int c = choice_check(choice, 0, 12);
+            int c = choice_check(choice, 0, 13);
             cls();
             switch (c)
             {
@@ -172,25 +173,26 @@ void tea_login()
             case 5:
             case 6:
             case 7:
+            case 8:
                 t.display(c);
                 pause();
                 break;
-            case 8:
             case 9:
             case 10:
             case 11:
+            case 12:
             {
-                vector<student> vs = t._sort(c - 7);
+                vector<student> vs = t._sort(c - 8);
                 for (auto i : vs)
                     cout << "\n"
-                         << i.get_name() << "\n  生源： " << i.get_province() << "\n  总分 " << i.get_score() << "\n 出生日期:" << i.get_birthday() << endl;
+                         << i.get_name() << "\n  生源： " << i.get_province() << "\n  总分 " << i.get_final_score() << "\n 出生日期:" << i.get_birthday() << endl;
                 cout << "\n\n[INFO]共有 " << vs.size() << " 个学生\n"
                      << endl;
                 pause();
                 break;
             }
-            case 12:
-                t.admit();
+            case 13:
+                t.approval();
                 pause();
                 break;
             case 0:
@@ -201,7 +203,7 @@ void tea_login()
                 return;
             default:
                 pause();
-                cin.ignore(1024, '\n');
+                cin.sync();
                 continue;
             }
         }
@@ -213,6 +215,7 @@ void admin_login()
     admin a;
     if (a.login())
     {
+        string choice;
         while (1)
         {
             cls();
@@ -222,10 +225,10 @@ void admin_login()
                  << "3.initialize students data\n"
                  << "4.initialize teachers data\n"
                  << "5.register teachers accounts\n"
+                 << "6.admit\n"
                  << "0.exit" << endl;
-            string choice;
             cin >> choice;
-            int c = choice_check(choice, 0, 5);
+            int c = choice_check(choice, 0, 6);
             cls();
             switch (c)
             {
@@ -259,10 +262,19 @@ void admin_login()
                     cout << "ukey error" << endl;
                 break;
             }
+            case 6:
+            {
+                if (a.ukey_check())
+                    a.admit();
+                else
+                    cout << "ukey error" << endl;
+                pause();
+                break;
+            }
             case 0:
                 return;
             default:
-                cin.ignore(1024, '\n');
+                cin.sync();
                 continue;
             }
         }
