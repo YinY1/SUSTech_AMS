@@ -1,4 +1,4 @@
-#include "admin.h"
+﻿#include "admin.h"
 #include "base64.h"
 #include "control.h"
 #include "student.h"
@@ -53,7 +53,7 @@ void admin::display(int choice)
         return;
     }
     for (auto i : vt)
-        cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone() << " " << base64_decode(i.get_ukey().c_str()) << endl;
+        cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone_number() << " "<<i.get_password()<<" "<< base64_decode(i.get_ukey().c_str()) << endl;
     cout << "\n"
          << vt.size() << " teacher(s)" << endl;
 }

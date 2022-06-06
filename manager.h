@@ -1,4 +1,4 @@
-#ifndef MANAGER_H
+﻿#ifndef MANAGER_H
 #define MANAGER_H
 
 #include "student.h"
@@ -13,7 +13,7 @@ public:
     std::string get_ukey() { return ukey; } //获取操作密码
     std::vector<student> _sort(int);        //排序
 protected:
-    char ukey[20] = {};
+    char ukey[20] = {}; //操作密码
 };
 
 #endif

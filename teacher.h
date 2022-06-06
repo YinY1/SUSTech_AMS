@@ -3,17 +3,20 @@
 
 #include "manager.h"
 #include "student.h"
+#include <string>
 #include <vector>
 class teacher : public manager
 {
 public:
     teacher() {}
     bool login();
-    bool read(char[]);
-    void approval(); //瀹℃壒
-    void signup();   //娉ㄥ唽
+    bool read(char[]);//读取数据
+    void approval(); //审批
+    void signup();   //注册
     void display(int);
+    void set_overall_score(float);
     void cpy_info(const teacher &);
+    std::string get_password() { return password; }
 };
 
 #endif

@@ -3,13 +3,13 @@
 
 #include <string>
 
-bool id_check(std::string);              //èº«ä»½è¯éªŒè¯
-bool password_check(std::string);        //å¯†ç éªŒè¯
-bool province_check(std::string);        //çœä»½éªŒè¯
-bool phone_check(std::string);           //æ‰‹æœºå·éªŒè¯
-bool nation_check(std::string);          //æ°‘æ—éªŒè¯
-bool date_check(std::string);            //æ—¥æœŸéªŒè¯
-bool email_check(std::string);           //é‚®ç®±éªŒè¯
-int choice_check(std::string, int, int); //é€‰æ‹©éªŒè¯
+bool id_check(std::string);              //Éí·İÖ¤ÑéÖ¤
+bool password_check(std::string);        //ÃÜÂëÑéÖ¤
+bool province_check(std::string);        //Ê¡·İÑéÖ¤
+bool phone_check(std::string);           //ÊÖ»úºÅÑéÖ¤
+bool nation_check(std::string);          //Ãñ×åÑéÖ¤
+bool date_check(std::string);            //ÈÕÆÚÑéÖ¤
+bool email_check(std::string);           //ÓÊÏäÑéÖ¤
+int choice_check(std::string, int, int); //Ñ¡ÔñÑéÖ¤
 
 #endif

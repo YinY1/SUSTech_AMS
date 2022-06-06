@@ -8,7 +8,7 @@ using namespace std;
 string user::set_phone_number()
 {
     string num;
-    cout << "\n[INFO]è¯·è¾“å…¥æ‰‹æœºå·ç ï¼šè¾“å…¥0è¿”å›ž\n" << endl;
+    cout << "\n[INFO]ÇëÊäÈëÊÖ»úºÅÂë£ºÊäÈë0·µ»Ø\n" << endl;
     while (1)
     {
         cin >> num;
@@ -22,7 +22,7 @@ string user::set_phone_number()
 void user::set_name()
 {
     string name;
-    cout << "\n[INFO]è¯·è¾“å…¥å§“åï¼š\n" << endl;
+    cout << "\n[INFO]ÇëÊäÈëÐÕÃû£º\n" << endl;
     while (cin >> name)
     {
         if (name.length() < 45)
@@ -31,7 +31,7 @@ void user::set_name()
             break;
         }
         else
-            cout << "\n[WRONG]å§“åè¿‡é•¿ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š\n" << endl;
+            cout << "\n[WRONG]ÐÕÃû¹ý³¤£¬ÇëÖØÐÂÊäÈë£º\n" << endl;
     }
 }
 
@@ -39,11 +39,11 @@ void user::set_password()
 {
     string password;
     bool check = 0;
-    cout << "\n[INFO]è¯·è¾“å…¥å¯†ç ï¼š\n" << endl;
+    cout << "\n[INFO]ÇëÊäÈëÃÜÂë£º\n" << endl;
     while (!check)
     {
         cin>>password;
-        check = password_check(password); //æ£€æŸ¥å¯†ç æ˜¯å¦åˆæ³•
+        check = password_check(password); //¼ì²éÃÜÂëÊÇ·ñºÏ·¨
     }
     strcpy_s(this->password, password.c_str());
 }

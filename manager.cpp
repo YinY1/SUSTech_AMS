@@ -1,4 +1,4 @@
-#include "manager.h"
+﻿#include "manager.h"
 #include "base64.h"
 #include "student.h"
 #include <algorithm>
@@ -43,7 +43,7 @@ vector<student> manager::_sort(int choice) //排序
         cout << "\n[INFO]暂无学生数据！" << endl;
         return vs;
     }
-    //"排序模式：1.按姓名 2.按成绩(仅能在这里approval) 3.按省份 0.退出"<<endl;
+    //"排序模式：0.按总评成绩,1.按姓名 2.按高考成绩(仅能在这里approval) 3.按省份 0.退出"<<endl;
     switch (choice)
     {
     case 0: //按综评成绩排序

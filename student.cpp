@@ -1,4 +1,4 @@
-#include "student.h"
+﻿#include "student.h"
 #include "base64.h"
 #include "check.h"
 #include "control.h"
@@ -12,16 +12,11 @@ using namespace std;
 
 const student mark = student();
 
-student::student()
-{
-    memset(score, 0, sizeof(score));
-}
-
 void student::signup()
 {
-    middle("---------------------", 1);
-    middle("欢迎使用管理系统!", 2);
-    middle("---------------------", 3);
+    middle_print("---------------------", 1,0);
+    middle_print("欢迎使用管理系统!", 2,0);
+    middle_print("---------------------", 3,0);
     cout << "\n[INFO]请按照提示进行注册\n\n";
     strcpy_s(phone_number, set_phone_number().c_str());
     //查重
@@ -180,54 +175,6 @@ void student::set_political_status()
         }
         strcpy_s(political_status, p[n - 1]);
         break;
-    }
-}
-
-void student::set_basic_info()
-{
-    string choice;
-    while (1)
-    {
-        cout << "\n[INFO]请输入想要更改的信息：\n1.学校名称\n2.民族\n3.政治面貌\n4.高考省份\n5.学籍号\n6.身份证\n7.邮箱\n8.显示目前信息\n0.退出\n"
-             << endl;
-        cin >> choice;
-        int c = choice_check(choice, 0, 8);
-        switch (c)
-        {
-        case 1:
-            set_school_name();
-            break;
-        case 2:
-            set_nation();
-            break;
-        case 3:
-            set_political_status();
-            break;
-        case 4:
-            set_province();
-            break;
-        case 5:
-            set_student_number();
-            break;
-        case 6:
-            set_id();
-            break;
-        case 7:
-            set_email();
-            break;
-        case 8:
-            display(1);
-            pause();
-            break;
-        case 0:
-            cls();
-            write(1);
-            return;
-        default:
-            pause();
-            cin.sync();
-            continue;
-        }
     }
 }
 
@@ -527,18 +474,25 @@ void student::set_score()
                     cls();
                     break;
                 }
+				
                 const char *p[] = {"语文", "数学", "外语", "物理", "化学", "生物", "地理", "政治", "历史", "技术", "年级排名", "年级总人数"};
                 if (c == 8)
                     cout << "\n[INFO]等级A输入100，等级B输入80，等级C输入60，等级D输入40，等级E/(无等级)输入0\n";
                 else
                     cout << "\n[INFO]请输入你的成绩，没有的请填0（总分750分制）：\n";
                 cout << "请输入 " << test[c - 1] << " 成绩：" << endl;
-                score[c - 1][12] = 0;
-                if (c == 8)//学业水平考试另外计算
+				
+				float former_score[13];//保存更改前的分数
+				for (int i = 0; i < 13; i++)
+				{
+					former_score[i] = score[c - 1][i];
+					score[c - 1][i] = 0;
+				}
+                
+				if (c == 8)//学业水平考试另外计算
                 {
-                    for (int i = 3; i <= 8; i++)
+                    for (int i = 3,temp; i <= 8; i++)
                     {
-                        int temp;
                         cout << "\n"
                              << p[i] << "\t";
                         cin >> temp;
@@ -569,7 +523,8 @@ void student::set_score()
                             cerr << "\n[WRONG]你的总分超过了750分，请检查输入！\n"
                                  << endl;
                             pause();
-                            score[c - 1][12] = 0;
+                            for(int i=0;i<13;i++)
+								score[c - 1][i]=former_score[i];
                             break;
                         }
                     }
@@ -728,7 +683,7 @@ void student::write(int choice)
         strcpy_s(w.name, base64_encode(name).c_str());
         f.write((char *)&w, sizeof(student));
         f.write((char *)&mark, sizeof(student));
-        cout << "注册成功" << endl;
+        cout << "\n[INFO]注册成功\n" << endl;
         break;
     case 1: //写个人基本信息
         strcpy_s(w.province, base64_encode(province).c_str());
@@ -790,7 +745,7 @@ void student::write(int choice)
     f.close();
 }
 
-void student::print_admitted()
+void student::print_is_admitted()
 {
     const char *p[] = {"未审批", "已录取", "未录取"};
     cout << p[is_admitted] << endl;

@@ -1,4 +1,4 @@
-#include "teacher.h"
+﻿#include "teacher.h"
 #include "base64.h"
 #include "check.h"
 #include "control.h"
@@ -20,7 +20,7 @@ void teacher::signup() //只提供给管理员使用
     string phone = base64_encode(set_phone_number());
     while (f.read((char *)&t, sizeof(teacher)) && !endmark(t))
     {
-        if (phone == t.get_phone())
+        if (phone == t.get_phone_number())
         {
             cerr << "\n[WRONG]The number has been registered\n"
                  << endl;
@@ -134,7 +134,7 @@ void teacher::approval()
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_phone() == vs[count - 1].get_phone())
+            if (ts.get_phone_number() == vs[count - 1].get_phone_number())
             {
                 while (1)
                 {
@@ -157,9 +157,9 @@ void teacher::approval()
         f.close();
     }
     cls();
-    cout << "\n[SUCCESS]录取完毕！\n"
+    cout << "\n[SUCCESS]审批完毕！\n"
          << endl;
-    cin.ignore();
+    cin.sync();
 }
 
 bool teacher::read(char key[])
@@ -220,7 +220,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << ts.get_name() << "\n学籍号:" << ts.get_student_number() << "\t\t总分 " << ts.get_final_score() << "\t";
-                ts.print_admitted();
+                ts.print_is_admitted();
                 flag = 1;
                 break;
             }
@@ -255,7 +255,7 @@ void teacher::display(int choice) //特定需求查找
         {
             cout << "\n"
                  << i.get_name() << "\t\t总分 " << i.get_final_score() << "\t";
-            i.print_admitted();
+            i.print_is_admitted();
         }
         break;
     }
@@ -306,7 +306,7 @@ void teacher::display(int choice) //特定需求查找
             cout << "\n"
                  << i.get_name() << "\n  总分 " << i.get_final_score()
                  << "\n  出生日期 " << i.get_birthday() << endl;
-            i.print_admitted();
+            i.print_is_admitted();
         }
         cout << "\n[INFO]共有 " << vs.size() << " 个学生" << endl;
         break;
@@ -334,7 +334,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
-                i.print_admitted();
+                i.print_is_admitted();
             }
         }
         break;
@@ -365,7 +365,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
-                i.print_admitted();
+                i.print_is_admitted();
             }
         }
         break;

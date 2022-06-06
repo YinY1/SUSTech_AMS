@@ -1,4 +1,4 @@
-#ifndef ADMIN_H
+﻿#ifndef ADMIN_H
 #define ADMIN_H
 
 #include "manager.h"
