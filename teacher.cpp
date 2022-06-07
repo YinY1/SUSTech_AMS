@@ -109,24 +109,9 @@ void teacher::approval()
                 cerr << "\n[WRONG]输入错误，请重新输入\n"
                      << endl;
         }
-        //计算成绩
-        float test_score = 0;
-        while (1)
-        {
-            cout << "\n[INFO]请输入 " << sname << " 的校测成绩：\n\n";
-            cin >> test_score;
-            if (test_score >= 0 && test_score <= 100)
-            {
-                cout << "\n[INFO]校测成绩为：" << test_score << endl;
-                break;
-            }
-            else
-                cerr << "\n[WRONG]输入错误，请重新输入\n"
-                     << endl;
-        }
         //审批
         int a_flag;
-        cout << "\n[INFO]是否通过审核？\n\n1.是 2.否\n"
+        cout << "\n[INFO]是否通过初审？\n\n1.是 2.否\n"
              << endl;
         cin >> a_flag;
         student s, ts;
@@ -142,8 +127,6 @@ void teacher::approval()
                     if (ukey_check())
                     {
                         s.set_is_admitted(a_flag); // 0为未审批，1为通过，2为未通过
-                        if (a_flag == 1)
-                            s.set_overall_score(test_score); //设置总成绩
                         f.seekp(-long(sizeof(student)), ios::cur);
                         f.write((char *)&s, sizeof(student));
                         pause();
@@ -161,6 +144,68 @@ void teacher::approval()
     cout << "\n[SUCCESS]审批完毕！\n"
          << endl;
     cin.sync();
+}
+
+void teacher::input_overall_score()
+{
+    double test_score = 0;
+    size_t count = 0;
+    string sname;
+    student s, ts;
+    fstream f;
+    vector<student> vs = _sort(1);
+    //只留下已过审的
+    for (auto it = vs.begin(); it != vs.end();)
+    {
+        if (it->get_is_admitted() != 1)
+            it = vs.erase(it);
+        else
+            it++;
+    }
+    while (count < vs.size())
+    {
+        cls();
+        sname = vs[count].get_name();
+        while (1)
+        {
+            cout << "\n[INFO]目前还剩 " << vs.size() - count << " 位学生未录入成绩\n"
+                 << "\n[INFO]请输入 " << sname << " 的校测成绩：\n\n";
+            cin >> test_score;
+            if (test_score >= 0 && test_score <= 100)
+            {
+                cout << "\n[INFO]校测成绩为：" << test_score << endl;
+                break;
+            }
+            else
+                cerr << "\n[WRONG]输入错误，请重新输入\n"
+                     << endl;
+        }
+        f.open("data\\student.dat", ios::in | ios::out | ios::binary);
+        f.seekp(0, ios::beg);
+        while(f.read((char *)&s, sizeof(student)) && !endmark(s))
+        {
+            ts.cpy_info(s);
+            if (ts.get_phone_number() == vs[count].get_phone_number())
+            {
+                while (1)
+                {
+                    if (ukey_check())
+                    {
+                        s.set_overall_score(test_score);
+                        f.seekp(-long(sizeof(student)), ios::cur);
+                        f.write((char *)&s, sizeof(student));
+                        pause();
+                        break;
+                    }
+                    else
+                        cout << "\n[WRONG]请检查操作密码后重试\n" << endl;
+                }
+                break;
+            }
+        }
+        f.close();
+        count++;
+    }
 }
 
 bool teacher::read(char key[])

@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include <iomanip>
 using namespace std;
 
 const student smark = student();
@@ -18,7 +18,7 @@ admin::admin()
 {
     strcpy_s(password, "admin");
     strcpy_s(phone_number, "12345678901");
-    strcpy_s(ukey, "YWRtaW4="); //admin base64加密后
+    strcpy_s(ukey, "YWRtaW4="); // admin base64加密后
 }
 
 void admin::display(int choice)
@@ -36,7 +36,7 @@ void admin::display(int choice)
     if (vt.empty())
     {
         cls();
-        cout << "\nThere is NO such TEACHER in your college:D" << endl;
+        cout << "\nThere is NO TEACHERs in your college:D" << endl;
         return;
     }
     //"查找模式：1.按姓名查找 2.按ID 查找0.退出"<<endl;
@@ -54,7 +54,7 @@ void admin::display(int choice)
         return;
     }
     for (auto i : vt)
-        cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone_number() << " "<<i.get_password()<<" "<< base64_decode(i.get_ukey().c_str()) << endl;
+        cout << "NO." << i.get_id() << " " << i.get_name() << " " << i.get_phone_number() << " " << base64_decode(i.get_password().c_str()) << " " << base64_decode(i.get_ukey().c_str()) << endl;
     cout << "\n"
          << vt.size() << " teacher(s)" << endl;
 }
@@ -72,6 +72,20 @@ void admin::admit()
     size_t num;
     string s;
     vector<student> vs = _sort(0);
+    for (auto it = vs.begin(); it != vs.end();)
+    {
+        if (it->get_overall_score() == 0)
+            it = vs.erase(it);
+        else
+            it++;
+    }
+    if (vs.empty())
+    {
+        cls();
+        cout << "\nThere is NO STUDENTs in your college:D" << endl;
+        pause();
+        return;
+    }
     while (1)
     {
         cls();
@@ -102,8 +116,10 @@ void admin::admit()
                 {
                     fstream f("data\\admission_list.txt", ios::out);
                     f.seekp(0, ios::beg);
+                    f<<setiosflags(ios::left)<<setw(30)<<"姓名"<<setw(20)<<"身份证\t"<<"成绩"<<endl;
                     for (size_t i = 0; i < num; i++)
-                        f << vs[i].get_name() <<"\t\t"<< vs[i].get_id() << endl;
+                        f << setiosflags(ios::left)<<setw(30)
+                        <<vs[i].get_name() <<setw(20)  << vs[i].get_id() <<"\t" <<vs[i].get_overall_score()<<endl;
                     f.close();
                     cout << "\n[INFO]Admission success!\n"
                          << endl;

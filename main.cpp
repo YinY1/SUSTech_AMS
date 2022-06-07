@@ -126,14 +126,22 @@ void stu_login()
 				cout << "\n\n[INFO]已成功登出！\n"
 					<< endl;
 			}
-			else
+			else if(stu.get_is_admitted()==1)
 			{
 				middle_print("-------------------------------", 1, 0);
-				middle_print("您的资料已在审核中，请静候佳音", 2, 0);
+				middle_print("您的资料已通过初审，请静候佳音", 2, 0);
 				middle_print("-------------------------------", 3, 0);
 				pause();
 				break;
 			}
+            else 
+            {
+                middle_print("--------------------------", 1, 0);
+				middle_print("很遗憾，您未通过初审", 2, 0);
+				middle_print("--------------------------", 3, 0);
+				pause();
+				break;
+            }
         }
         sleep();
         cls();
@@ -329,7 +337,6 @@ void admin_login()
                     a.admit();
                 else
                     cout << "ukey error" << endl;
-                pause();
                 break;
             }
             case 0:
