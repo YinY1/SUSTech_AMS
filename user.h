@@ -15,11 +15,12 @@ public:
     std::string get_phone_number() { return phone_number; } //获取手机号
     std::string get_name() { return name; }                 //获取姓名
     std::string get_id() { return id; }                     //获取身份证
-    template <typename T>
+    
+	template <typename T>
     bool endmark(T &u) //判断是否读取到文件结束标志
     {
         return u.get_phone_number() == "nophone";
-    }
+    }//用模板简化操作
 
 protected:
     char phone_number[20] = {"nophone"}; //手机号

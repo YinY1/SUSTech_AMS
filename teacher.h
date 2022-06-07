@@ -1,4 +1,4 @@
-#ifndef TEACHER_H
+ï»¿#ifndef TEACHER_H
 #define TEACHER_H
 
 #include "manager.h"
@@ -10,11 +10,10 @@ class teacher : public manager
 public:
     teacher() {}
     bool login();
-    bool read(char[]);//¶ÁÈ¡Êı¾İ
-    void approval(); //ÉóÅú
-    void signup();   //×¢²á
+    bool read(char[]);	//è¯»å–æ•°æ®
+    void approval();	//å®¡æ‰¹
+    void signup();		//æ³¨å†Œ
     void display(int);
-    void set_overall_score(float);
     void cpy_info(const teacher &);
     std::string get_password() { return password; }
 };

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 const teacher tmark = teacher();
@@ -15,7 +16,7 @@ void teacher::signup() //只提供给管理员使用
 {
     int count = 10000;
     teacher t;
-    fstream f("tea.dat", ios::in | ios::out | ios::binary);
+    fstream f("data\\teacher.dat", ios::in | ios::out | ios::binary);
     f.seekp(0, ios::beg);
     string phone = base64_encode(set_phone_number());
     while (f.read((char *)&t, sizeof(teacher)) && !endmark(t))
@@ -129,7 +130,7 @@ void teacher::approval()
              << endl;
         cin >> a_flag;
         student s, ts;
-        fstream f("stu.dat", ios::in | ios::out | ios::binary);
+        fstream f("data\\student.dat", ios::in | ios::out | ios::binary);
         f.seekp(0, ios::beg);
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
@@ -166,7 +167,7 @@ bool teacher::read(char key[])
 {
     string ekey = base64_encode(key);
     teacher t;
-    fstream f("tea.dat", ios::in | ios::binary);
+    fstream f("data\\teacher.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
@@ -197,7 +198,7 @@ bool teacher::read(char key[])
 void teacher::display(int choice) //特定需求查找
 {
     student s, ts;
-    fstream f("stu.dat", ios::in | ios::binary);
+    fstream f("data\\student.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     switch (choice)
     {

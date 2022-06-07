@@ -1,7 +1,9 @@
 ﻿#include "control.h"
 #include <fstream>
 #include <iostream>
+
 using namespace std;
+
 // https://blog.csdn.net/HuangMY2007/article/details/119959021
 void middle_print(string str, int y, bool mode)
 {
@@ -19,7 +21,7 @@ void middle_print(string str, int y, bool mode)
 		SetConsoleCursorPosition(hOutput, pos);
 		cout << str << endl;
 	}
-	else
+	else// 打印logo
 	{
 		fstream f(str, ios::in);
 		char c;

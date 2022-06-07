@@ -36,8 +36,8 @@ public:
     void write(int);                                            //写入信息
     int input_phone_number(int);                                //输入手机号
     int get_is_admitted() { return is_admitted; }               //获取录取状态
-    float get_final_score() { return score[8][12]; }            //获取高考成绩
-    float get_level_test_score() { return score[7][12]; }       //获取等级考试成绩
+    double get_final_score() { return score[8][12]; }            //获取高考成绩
+    double get_level_test_score() { return score[7][12]; }       //获取等级考试成绩
     double get_overall_score() { return overall_score; }        //获取总成绩
     std::string get_student_number() { return student_number; } //获取学籍号
     std::string get_province() { return province; }             //获取省份
@@ -71,8 +71,8 @@ private:
     char security_question[55] = {"empty"}; //密保问题
     char security_answer[25] = {};          //密保答案
     char application[5][20] = {};           //志愿
-    float score[9][13] = {};                //成绩
-    double overall_score = 0;               //总成绩
+    double score[9][13] = {};                //成绩
+    double overall_score = 0;               //综评成绩
     int is_admitted = 0;                    //录取状态
 };
 

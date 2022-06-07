@@ -16,7 +16,7 @@ inline void sleep()
     Sleep(500);
 }
 
-void middle_print(std::string, int,bool); //居中打印
-void set_window();             //设置窗口
+void middle_print(std::string, int,bool);	//居中打印
+void set_window();							//设置窗口
 
 #endif

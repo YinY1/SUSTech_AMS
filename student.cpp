@@ -185,7 +185,7 @@ void student::set_parents_info()
     while (1)
     {
         cout << "\n[INFO]\n请选择需要填写的信息：\n"
-             << "1.父亲信息\t2.母亲信息\t3.父亲联系方式\t4.母亲联系方式\n"
+             << "1.父亲姓名\t2.母亲姓名\t3.父亲联系方式\t4.母亲联系方式\n"
              << "5.父亲工作地址\t6.母亲工作地址\t7.父亲职业\t8.母亲职业\t9.显示家长信息\n0.返回" << endl;
         cin >> choice;
         int c = choice_check(choice, 0, 9);
@@ -482,7 +482,7 @@ void student::set_score()
                     cout << "\n[INFO]请输入你的成绩，没有的请填0（总分750分制）：\n";
                 cout << "请输入 " << test[c - 1] << " 成绩：" << endl;
 				
-				float former_score[13];//保存更改前的分数
+				double former_score[13];//保存更改前的分数
 				for (int i = 0; i < 13; i++)
 				{
 					former_score[i] = score[c - 1][i];
@@ -614,7 +614,7 @@ bool student::read(char key[], int choice)
 {
     student r;
     string ekey = base64_encode(key);
-    fstream f("stu.dat", ios::in | ios::binary);
+    fstream f("data\\student.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     do
     {
@@ -665,7 +665,7 @@ bool student::read(char key[], int choice)
 void student::write(int choice)
 {
     student w;
-    fstream f("stu.dat", ios::in | ios::out | ios::binary);
+    fstream f("data\\student.dat", ios::in | ios::out | ios::binary);
     f.seekp(0, ios::beg);
     do
     {

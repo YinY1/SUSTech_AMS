@@ -4,6 +4,7 @@
 #include "student.h"
 #include "user.h"
 #include <vector>
+
 class manager : public user
 {
 public:

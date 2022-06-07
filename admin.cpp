@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 const student smark = student();
@@ -17,14 +18,14 @@ admin::admin()
 {
     strcpy_s(password, "admin");
     strcpy_s(phone_number, "12345678901");
-    strcpy_s(ukey, "YWRtaW4=");
+    strcpy_s(ukey, "YWRtaW4="); //admin base64加密后
 }
 
 void admin::display(int choice)
 {
     vector<teacher> vt;
     teacher r, tr;
-    fstream f("tea.dat", ios::in | ios::binary);
+    fstream f("data\\teacher.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     while (f.read((char *)&r, sizeof(teacher)) && !endmark(r))
     {
@@ -99,7 +100,7 @@ void admin::admit()
             {
                 if (ukey_check())
                 {
-                    fstream f("admit.txt", ios::out);
+                    fstream f("data\\admission_list.txt", ios::out);
                     f.seekp(0, ios::beg);
                     for (size_t i = 0; i < num; i++)
                         f << vs[i].get_name() <<"\t\t"<< vs[i].get_id() << endl;
@@ -128,18 +129,18 @@ void admin::admit()
 
 void admin::stu_init()
 {
-    fstream f("stu.dat", ios::out | ios::binary);
+    fstream f("data\\student.dat", ios::out | ios::binary);
     f.seekp(0, ios::beg);
     f.write((char *)&smark, sizeof(student));
-    cout << "\nInitialization \"stu.dat\" complete" << endl;
+    cout << "\nInitialization \"student.dat\" complete" << endl;
     f.close();
 }
 
 void admin::tea_init()
 {
-    fstream f("tea.dat", ios::out | ios::binary);
+    fstream f("data\\teacher.dat", ios::out | ios::binary);
     f.seekp(0, ios::beg);
     f.write((char *)&tmark, sizeof(teacher));
-    cout << "\nInitialization \"tea.dat\" complete" << endl;
+    cout << "\nInitialization \"teacher.dat\" complete" << endl;
     f.close();
 }

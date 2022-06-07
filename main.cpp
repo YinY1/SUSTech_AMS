@@ -10,7 +10,7 @@ using namespace std;
 
 void stu_signup();
 void stu_login();
-void stu_set_basic_info();
+void stu_set_basic_info(student &);
 void stu_rechieve_password();
 void tea_login();
 void admin_login();
@@ -91,7 +91,7 @@ void stu_login()
 				{
 				case 1:
 					stu.display(1);
-					stu_set_basic_info();
+					stu_set_basic_info(stu);
 					break;
 				case 2:
 					stu.display(2);
@@ -150,9 +150,8 @@ void stu_signup()
     sleep();
 }
 
-void stu_set_basic_info()
+void stu_set_basic_info(student & stu)
 {
-    student stu;
     string choice;
     while (1)
     {
@@ -192,7 +191,6 @@ void stu_set_basic_info()
             stu.write(1);
             return;
         default:
-            pause();
             cin.sync();
             continue;
         }

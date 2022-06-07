@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 void manager::set_ukey()
@@ -30,7 +31,7 @@ vector<student> manager::_sort(int choice) //排序
 {
     vector<student> vs;
     student s, ts;
-    fstream f("stu.dat", ios::in | ios::binary);
+    fstream f("data\\student.dat", ios::in | ios::binary);
     f.seekg(0, ios::beg);
     while (f.read((char *)&s, sizeof(student)) && !endmark(s))
     {
@@ -43,7 +44,7 @@ vector<student> manager::_sort(int choice) //排序
         cout << "\n[INFO]暂无学生数据！" << endl;
         return vs;
     }
-    //"排序模式：0.按总评成绩,1.按姓名 2.按高考成绩(仅能在这里approval) 3.按省份 0.退出"<<endl;
+    //"排序模式：0.按总评成绩,1.按姓名 2.按高考成绩 3.按省份 0.退出"<<endl;
     switch (choice)
     {
     case 0: //按综评成绩排序
@@ -58,7 +59,7 @@ vector<student> manager::_sort(int choice) //排序
              { return a.get_overall_score() > b.get_overall_score(); });
         break;
     case 1:
-        // sort会调用=进行swap,所以不要随意重载=
+        // sort会调用=进行swap,所以不要随意重载=，以免=中含有除赋值以外的操作被执行
         sort(vs.begin(), vs.end(), [](student &a, student &b)
              { return a.get_name() < b.get_name(); }); // lambda表达式
         break;

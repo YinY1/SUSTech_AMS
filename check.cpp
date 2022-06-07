@@ -1,8 +1,9 @@
-#include "check.h"
+﻿#include "check.h"
 #include <iostream>
 
 using namespace std;
 
+// https://baike.baidu.com/item/%E8%BA%AB%E4%BB%BD%E8%AF%81%E6%A0%A1%E9%AA%8C%E7%A0%81/3800388#3_3
 bool id_check(string id)
 {
     if (id.length() != 18)
@@ -120,10 +121,13 @@ bool date_check(string d) //日期合法检查
 bool email_check(string s)
 {
     //邮箱合法检查
-    const char *p[] = {"@qq.com", "@163.com", "@126.com", "@sina.com", "@gmail.com", "@hotmail.com", "@sohu.com", "@139.com", "@189.com", "@wo.com.cn", "@21cn.com", "@tom.com", "@yahoo.com", "@live.com", "@msn.com", "@foxmail.com", "@yeah.net", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.163.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com"};
-    for (int i = 0; i < 63; i++)
-        if (s.find(p[i]) != string::npos)
+    string p[] = {"@qq.com", "@163.com", "@126.com", "@sina.com", "@gmail.com", "@hotmail.com", "@sohu.com", "@139.com", "@189.com", "@wo.com.cn", "@21cn.com", "@tom.com", "@yahoo.com", "@live.com", "@msn.com", "@foxmail.com", "@yeah.net", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.163.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com"};
+    for (int i = 0,k; i < 63; i++)
+    {
+        k = s.find(p[i]);
+        if (k != string::npos && k == s.size() - p[i].size())
             return 1;
+    }
     cerr << "\n[WRONG]请输入正确的邮箱！输入0退出\n"
          << endl;
     return 0;

@@ -3,7 +3,7 @@
 
 #include <string>
 
-//base64编码表
+// base64编码表
 static const std::string base64_chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"

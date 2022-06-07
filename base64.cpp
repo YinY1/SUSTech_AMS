@@ -1,6 +1,7 @@
-#include "base64.h"
+ï»¿#include "base64.h"
 #include <cstring>
-using namespace std;
+
+using std::string;
 
 //https://github.com/ReneNyffenegger/cpp-base64
 
@@ -8,18 +9,18 @@ string base64_encode(const string &bytes_to_encode)
 {
     string ret;
     int i = 0, j = 0,str=0,in_len=bytes_to_encode.length();
-    unsigned char char_array_3[3]; // ½«Èı¸ö×Ö·û´¢´æÎª3*8=24¸öbit
-    unsigned char char_array_4[4]; // ½«Èı¸ö×Ö·û´¢´æÎª4*6=24¸öbit£¨ÖØĞÂ·Ö³É4×é£©
+    unsigned char char_array_3[3]; // å°†ä¸‰ä¸ªå­—ç¬¦å‚¨å­˜ä¸º3*8=24ä¸ªbit
+    unsigned char char_array_4[4]; // å°†ä¸‰ä¸ªå­—ç¬¦å‚¨å­˜ä¸º4*6=24ä¸ªbitï¼ˆé‡æ–°åˆ†æˆ4ç»„ï¼‰
     while (in_len--)
     {
-        char_array_3[i++] = bytes_to_encode[str++]; // ´æÈë×Ö·û
+        char_array_3[i++] = bytes_to_encode[str++]; // å­˜å…¥å­—ç¬¦
         if (i == 3)
         {
-            //&ÊÇÎªÁËÏû¸ßÎ»
-            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;                                     // ´æÈëµÚÒ»×éµÄÇ°6¸öbit
-            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4); // ´æÈëµÚÒ»×éºó2¸öbitºÍµÚ¶ş×éµÄÇ°4¸öbit
-            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6); // ´æÈëµÚ¶ş×éºó4¸öbitºÍµÚÈı×éµÄÇ°2¸öbit
-            char_array_4[3] = char_array_3[2] & 0x3f;                                            // ´æÈëµÚÈı×éµÄºó6¸öbit
+            //&æ˜¯ä¸ºäº†æ¶ˆé«˜ä½
+            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;                                     // å­˜å…¥ç¬¬ä¸€ç»„çš„å‰6ä¸ªbit
+            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4); // å­˜å…¥ç¬¬ä¸€ç»„å2ä¸ªbitå’Œç¬¬äºŒç»„çš„å‰4ä¸ªbit
+            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6); // å­˜å…¥ç¬¬äºŒç»„å4ä¸ªbitå’Œç¬¬ä¸‰ç»„çš„å‰2ä¸ªbit
+            char_array_4[3] = char_array_3[2] & 0x3f;                                            // å­˜å…¥ç¬¬ä¸‰ç»„çš„å6ä¸ªbit
             for (i = 0; (i < 4); i++)
                 ret += base64_chars[char_array_4[i]];
             i = 0;
@@ -37,7 +38,7 @@ string base64_encode(const string &bytes_to_encode)
         for (j = 0; (j < i + 1); j++)
             ret += base64_chars[char_array_4[j]];
 
-        while ((i++ < 3))       //Èç¹û×îºóÒ»×é²»×ã3¸ö×Ö·û£¬Ôò²¹³ä'='ÒÔÈ·±£ÄÜ¹¹³É4*6=24¸öbitµÄ×é
+        while ((i++ < 3))       //å¦‚æœæœ€åä¸€ç»„ä¸è¶³3ä¸ªå­—ç¬¦ï¼Œåˆ™è¡¥å……'='ä»¥ç¡®ä¿èƒ½æ„æˆ4*6=24ä¸ªbitçš„ç»„
             ret += '=';
     }
     return ret;
