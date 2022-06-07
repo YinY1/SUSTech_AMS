@@ -50,12 +50,12 @@ int main()
             stu_rechieve_password();
             break;
         case 6:
-			middle_print("ascii_logo\\kal.txt", 1, 1);
+			middle_print("data\\kal.txt", 1, 1);
             cout << "\nno guidence";
             pause();
             break;
         case 0:
-			middle_print("ascii_logo\\kal.txt", 1, 1);//打印logo
+			middle_print("data\\kal.txt", 1, 1);//打印logo
 			cout << "欢迎再次使用:D" << endl;
 			Sleep(1000);
             exit(0);
