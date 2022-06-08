@@ -550,6 +550,25 @@ void student::set_score()
     }
 }
 
+void student::set_exam_info()
+{
+    string n=this->name,str[4];
+    str[0] = "姓名：" + n;
+    n = this->id;
+    str[1]="身份证：" + n;
+    size_t num=time(0)%10000000+stoi(get_birthday());
+    str[2]="准考证号：" + to_string(num);
+    str[3]="考试时间：15：00-17：30";
+    for(int i=0;i<4;i++)
+        strcpy_s(exam_info[i],str[i].c_str());
+}
+
+void student::print_exam_info()
+{
+    for(int i=0;i<4;i++)
+        middle_print(exam_info[i],i+4,0);
+}
+
 void student::display(int choice)
 {
     switch (choice)
@@ -745,10 +764,10 @@ void student::write(int choice)
     f.close();
 }
 
-void student::print_is_admitted()
+void student::print_is_approved()
 {
-    const char *p[] = {"未审批", "已录取", "未录取"};
-    cout << p[is_admitted] << endl;
+    const char *p[] = {"未审批", "已过审", "未过审"};
+    cout << p[is_approved] << endl;
 }
 
 bool student::confirm_password()
@@ -851,7 +870,7 @@ void student::cpy_info(const student &r)
     strcpy_s(security_question, base64_decode(r.security_question).c_str());
     strcpy_s(security_answer, base64_decode(r.security_answer).c_str());
     strcpy_s(email, base64_decode(r.email).c_str());
-    is_admitted = r.is_admitted;
+    is_approved = r.is_approved;
     //读取家长信息
     strcpy_s(dad_name, base64_decode(r.dad_name).c_str());
     strcpy_s(dad_phone_number, base64_decode(r.dad_phone_number).c_str());

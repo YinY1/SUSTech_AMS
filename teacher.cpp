@@ -94,7 +94,7 @@ void teacher::approval()
         {
             cout << "\n[INFO]目前还剩 " << vs.size() - count << " 位学生未审核\n"
                  << "\n[INFO]请输入要对 " << sname << " 进行的的操作：\n\n"
-                 << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出录取操作" << endl;
+                 << "1.查看个人信息 \t2.查看家庭情况 \t3.查看个人经历 \t4.查看考试情况\n9.下一步 \t0.退出审批操作" << endl;
             cin >> sel;
             if (sel >= 1 && sel <= 4)
                 vs[count].display(sel);
@@ -126,7 +126,8 @@ void teacher::approval()
                 {
                     if (ukey_check())
                     {
-                        s.set_is_admitted(a_flag); // 0为未审批，1为通过，2为未通过
+                        s.set_is_approved(a_flag); // 0为未审批，1为通过，2为未通过
+                        s.set_exam_info();//填准考证
                         f.seekp(-long(sizeof(student)), ios::cur);
                         f.write((char *)&s, sizeof(student));
                         pause();
@@ -182,7 +183,7 @@ void teacher::input_overall_score()
         }
         f.open("data\\student.dat", ios::in | ios::out | ios::binary);
         f.seekp(0, ios::beg);
-        while(f.read((char *)&s, sizeof(student)) && !endmark(s))
+        while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
             if (ts.get_phone_number() == vs[count].get_phone_number())
@@ -194,11 +195,11 @@ void teacher::input_overall_score()
                         s.set_overall_score(test_score);
                         f.seekp(-long(sizeof(student)), ios::cur);
                         f.write((char *)&s, sizeof(student));
-                        pause();
                         break;
                     }
                     else
-                        cout << "\n[WRONG]请检查操作密码后重试\n" << endl;
+                        cout << "\n[WRONG]请检查操作密码后重试\n"
+                             << endl;
                 }
                 break;
             }
@@ -266,7 +267,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << ts.get_name() << "\n学籍号:" << ts.get_student_number() << "\t\t总分 " << ts.get_final_score() << "\t";
-                ts.print_is_admitted();
+                ts.print_is_approved();
                 flag = 1;
                 break;
             }
@@ -290,8 +291,11 @@ void teacher::display(int choice) //特定需求查找
                 vs.push_back(ts);
         }
         if (vs.empty())
+        {
             cerr << "\n[WRONG]没有找到该学校的学生\n"
                  << endl;
+            break;
+        }
         sort(vs.begin(), vs.end(), [](student &a, student &b)
              { return a.get_final_score() > b.get_final_score(); });
         cls();
@@ -301,7 +305,7 @@ void teacher::display(int choice) //特定需求查找
         {
             cout << "\n"
                  << i.get_name() << "\t\t总分 " << i.get_final_score() << "\t";
-            i.print_is_admitted();
+            i.print_is_approved();
         }
         break;
     }
@@ -352,7 +356,7 @@ void teacher::display(int choice) //特定需求查找
             cout << "\n"
                  << i.get_name() << "\n  总分 " << i.get_final_score()
                  << "\n  出生日期 " << i.get_birthday() << endl;
-            i.print_is_admitted();
+            i.print_is_approved();
         }
         cout << "\n[INFO]共有 " << vs.size() << " 个学生" << endl;
         break;
@@ -380,7 +384,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
-                i.print_is_admitted();
+                i.print_is_approved();
             }
         }
         break;
@@ -411,7 +415,7 @@ void teacher::display(int choice) //特定需求查找
             {
                 cout << "\n"
                      << i.get_name() << "\t\t总分 " << i.get_final_score() << endl;
-                i.print_is_admitted();
+                i.print_is_approved();
             }
         }
         break;

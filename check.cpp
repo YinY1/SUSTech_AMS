@@ -88,6 +88,8 @@ bool date_check(string d) //日期合法检查
         if (d.size() != 8)
             throw d;
         int year = stoi(d.substr(0, 4));
+        if (year > 2010 || year < 1950)
+            throw year;
         int month = stoi(d.substr(4, 2));
         int day = stoi(d.substr(6, 2));
         //检查包括闰年的日期
@@ -108,6 +110,14 @@ bool date_check(string d) //日期合法检查
         }
         else if (day > 31)
             throw d;
+        else if (month > 12||month<1)
+            throw d;
+    }
+    catch (int year)
+    {
+        cerr << "\n[WRONG]请输入1950~2010之间的年份！输入0退出\n"
+             << endl;
+        return 0;
     }
     catch (...)
     {
@@ -121,8 +131,9 @@ bool date_check(string d) //日期合法检查
 bool email_check(string s)
 {
     //邮箱合法检查
+    size_t k;
     string p[] = {"@qq.com", "@163.com", "@126.com", "@sina.com", "@gmail.com", "@hotmail.com", "@sohu.com", "@139.com", "@189.com", "@wo.com.cn", "@21cn.com", "@tom.com", "@yahoo.com", "@live.com", "@msn.com", "@foxmail.com", "@yeah.net", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.163.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com", "@vip.126.com", "@vip.yeah.net", "@vip.msn.com", "@vip.live.com", "@vip.qq.com", "@vip.sina.com", "@vip.tom.com"};
-    for (int i = 0,k; i < 63; i++)
+    for (int i = 0; i < 63; i++)
     {
         k = s.find(p[i]);
         if (k != string::npos && k == s.size() - p[i].size())

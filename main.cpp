@@ -22,9 +22,9 @@ int main()
     while (1)
     {
         cls();
-        middle_print("---------------------", 1,0);
-        middle_print("欢迎使用管理系统!", 2,0);
-        middle_print("---------------------", 3,0);
+        middle_print("---------------------", 1, 0);
+        middle_print("欢迎使用管理系统!", 2, 0);
+        middle_print("---------------------", 3, 0);
         cout << "\n[INFO]请按照提示输入选项\n\n"
              << "1.学生注册\n\n2.管理登录\n\n3.学生登录\n\n4.教师登录\n\n"
              << "5.找回密码(学生)\n\n6.报考指南\n\n0.退出\n"
@@ -50,14 +50,14 @@ int main()
             stu_rechieve_password();
             break;
         case 6:
-			middle_print("data\\kal.txt", 1, 1);
+            middle_print("data\\kal.txt", 1, 1);
             cout << "\nno guidence";
             pause();
             break;
         case 0:
-			middle_print("data\\kal.txt", 1, 1);//打印logo
-			cout << "欢迎再次使用:D" << endl;
-			Sleep(1000);
+            middle_print("data\\kal.txt", 1, 1); //打印logo
+            cout << "欢迎再次使用:D" << endl;
+            Sleep(1000);
             exit(0);
         default:
             cin.sync();
@@ -77,70 +77,71 @@ void stu_login()
         {
             cls();
             s = " 欢迎您," + stu.get_name() + "同学!";
-            middle_print("-----------------------", 1,0);
-            middle_print(s, 2,0);
-            middle_print("-----------------------", 3,0);
-			if(stu.get_is_admitted()==0)
-			{
-				cout << "\n[INFO]请按照提示输入选项\n\n"
-					<< "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.查看\\填写个人经历\n\n4.查看\\填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
-				cin >> choice;
-				int c = choice_check(choice, 0, 7);
-				cls();
-				switch (c)
-				{
-				case 1:
-					stu.display(1);
-					stu_set_basic_info(stu);
-					break;
-				case 2:
-					stu.display(2);
-					stu.set_parents_info();
-					break;
-				case 3:
-					stu.display(3);
-					stu.set_experience();
-					break;
-				case 4:
-					stu.set_score();
-					break;
-				case 5:
-					stu.set_security_question();
-					break;
-				case 6:
-					if (stu.change_password())
-						flag = 0;
-					break;
-				case 7:
-					if (stu.cancel_account())
-						flag = 0;
-					break;
-				case 0:
-					flag = 0;
-					break;
-				default:
-					cin.sync();
-					continue;
-				}
-				cls();
-				cout << "\n\n[INFO]已成功登出！\n"
-					<< endl;
-			}
-			else if(stu.get_is_admitted()==1)
-			{
-				middle_print("-------------------------------", 1, 0);
-				middle_print("您的资料已通过初审，请静候佳音", 2, 0);
-				middle_print("-------------------------------", 3, 0);
-				pause();
-				break;
-			}
-            else 
+            middle_print("-----------------------", 1, 0);
+            middle_print(s, 2, 0);
+            middle_print("-----------------------", 3, 0);
+            if (stu.get_is_admitted() == 0)
+            {
+                cout << "\n[INFO]请按照提示输入选项\n\n"
+                     << "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.查看\\填写个人经历\n\n4.查看\\填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
+                cin >> choice;
+                int c = choice_check(choice, 0, 7);
+                cls();
+                switch (c)
+                {
+                case 1:
+                    stu.display(1);
+                    stu_set_basic_info(stu);
+                    break;
+                case 2:
+                    stu.display(2);
+                    stu.set_parents_info();
+                    break;
+                case 3:
+                    stu.display(3);
+                    stu.set_experience();
+                    break;
+                case 4:
+                    stu.set_score();
+                    break;
+                case 5:
+                    stu.set_security_question();
+                    break;
+                case 6:
+                    if (stu.change_password())
+                        flag = 0;
+                    break;
+                case 7:
+                    if (stu.cancel_account())
+                        flag = 0;
+                    break;
+                case 0:
+                    flag = 0;
+                    break;
+                default:
+                    cin.sync();
+                    continue;
+                }
+                cls();
+                cout << "\n\n[INFO]已成功登出！\n"
+                     << endl;
+            }
+            else if (stu.get_is_admitted() == 1)
+            {
+                middle_print("-------------------------------", 1, 0);
+                middle_print("您的资料已通过初审，请准备考试", 2, 0);
+                middle_print("-------------------------------", 3, 0);
+                stu.print_exam_info();
+                pause();
+                break;
+            }
+            else
             {
                 middle_print("--------------------------", 1, 0);
-				middle_print("很遗憾，您未通过初审", 2, 0);
-				middle_print("--------------------------", 3, 0);
-				pause();
-				break;
+                middle_print("很遗憾，您未通过初审", 2, 0);
+                middle_print("--------------------------", 3, 0);
+                pause();
+                break;
             }
         }
         sleep();
@@ -158,7 +159,7 @@ void stu_signup()
     sleep();
 }
 
-void stu_set_basic_info(student & stu)
+void stu_set_basic_info(student &stu)
 {
     string choice;
     while (1)
@@ -210,6 +211,7 @@ void stu_rechieve_password()
     stu.rechieve_password();
     pause();
     cls();
+
 }
 
 void tea_login()
@@ -222,16 +224,16 @@ void tea_login()
         {
             cls();
             s = " 欢迎您," + t.get_name() + "老师!";
-            middle_print("-----------------------", 0,0);
-            middle_print(s, 1,0);
-            middle_print("-----------------------", 2,0);
+            middle_print("-----------------------", 0, 0);
+            middle_print(s, 1, 0);
+            middle_print("-----------------------", 2, 0);
             cout << "[INFO]请按照提示输入选项\n\n"
                  << "1.按姓名查找\n2.按学籍号查找\n3.按学校代码查找\n4.按出生时间段查找\n5.按分数段查找\n\n"
                  << "6.列出还未审核的学生\n7.列出已过审的学生\n8.列出未过审的学生\n\n"
                  << "9.按姓名排序\n10.按成绩排序\n11.按省份排序\n12.按年龄排序\n\n"
-                 << "13.进行录取审核\n\n0.退出" << endl;
+                 << "13.进行审批\n14.登记校测成绩\n\n0.退出" << endl;
             cin >> choice;
-            int c = choice_check(choice, 0, 13);
+            int c = choice_check(choice, 0, 14);
             cls();
             switch (c)
             {
@@ -262,6 +264,10 @@ void tea_login()
             }
             case 13:
                 t.approval();
+                pause();
+                break;
+            case 14:
+                t.input_overall_score();
                 pause();
                 break;
             case 0:
@@ -336,7 +342,10 @@ void admin_login()
                 if (a.ukey_check())
                     a.admit();
                 else
+                {
                     cout << "ukey error" << endl;
+                    pause();
+                }
                 break;
             }
             case 0:
