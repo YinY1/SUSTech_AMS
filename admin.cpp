@@ -62,6 +62,7 @@ void admin::display(int choice)
 bool admin::login()
 {
     cls();
+	cout<<"\n[INFO]please input your password:"<<endl;
     string pass;
     cin >> pass;
     return pass == password;
@@ -148,7 +149,6 @@ void admin::stu_init()
     fstream f("data\\student.dat", ios::out | ios::binary);
     f.seekp(0, ios::beg);
     f.write((char *)&smark, sizeof(student));
-    cout << "\nInitialization \"student.dat\" complete" << endl;
     f.close();
 }
 
@@ -157,6 +157,5 @@ void admin::tea_init()
     fstream f("data\\teacher.dat", ios::out | ios::binary);
     f.seekp(0, ios::beg);
     f.write((char *)&tmark, sizeof(teacher));
-    cout << "\nInitialization \"teacher.dat\" complete" << endl;
     f.close();
 }
