@@ -74,11 +74,11 @@ bool teacher::login()
 void teacher::approval()
 {
     vector<student> vs = _sort(2);
-    //从容器中删除已被审核的学生
+    //从容器中删除已被审核的学生或者没有完善身份证的学生
     for (auto it = vs.begin(); it != vs.end();)
     {
-        if (it->get_is_admitted())
-            it = vs.erase(it);
+        if (it->get_is_admitted()||it->get_id()=="")
+				it = vs.erase(it);
         else
             it++;
     }
@@ -127,7 +127,7 @@ void teacher::approval()
                     if (ukey_check())
                     {
                         s.set_is_approved(a_flag); // 0为未审批，1为通过，2为未通过
-                        s.set_exam_info();//填准考证
+                        s.set_exam_info();//生成准考证信息
                         f.seekp(-long(sizeof(student)), ios::cur);
                         f.write((char *)&s, sizeof(student));
                         pause();
@@ -158,11 +158,17 @@ void teacher::input_overall_score()
     //只留下已过审的
     for (auto it = vs.begin(); it != vs.end();)
     {
-        if (it->get_is_admitted() != 1)
+        if (it->get_is_admitted() != 1||it->get_overall_score()!=0)
             it = vs.erase(it);
         else
             it++;
     }
+	if(vs.empty())
+	{
+		cerr << "\n[INFO]还未审核或已登记完毕！\n"
+			 << endl;
+		return;
+	}
     while (count < vs.size())
     {
         cls();

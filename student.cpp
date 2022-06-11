@@ -556,7 +556,7 @@ void student::set_exam_info()
     str[0] = "姓名：" + n;
     n = this->id;
     str[1]="身份证：" + n;
-    size_t num=time(0)%10000000+stoi(get_birthday());
+	size_t num=time(0)%10000000+stoi(get_birthday());
     str[2]="准考证号：" + to_string(num);
     str[3]="考试时间：15：00-17：30";
     for(int i=0;i<4;i++)

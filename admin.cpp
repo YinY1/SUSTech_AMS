@@ -144,6 +144,19 @@ void admin::admit()
     }
 }
 
+void admin::deadline()
+{
+	fstream f("data\\admission_list.txt", ios::in|ios::out);
+	if(f.get()==EOF)
+	{
+		f<<"ddl"<<endl;
+		cout<<"success"<<endl;
+	}
+	else
+		cerr << "wrong" << endl;
+	f.close();
+}
+
 void admin::stu_init()
 {
     fstream f("data\\student.dat", ios::out | ios::binary);

@@ -11,6 +11,7 @@ public:
     void stu_init();	//初始化学生信息
     void tea_init();	//初始化教师信息
     void admit();		//录取
+	void deadline();	//截止报名
 };
 
 #endif
