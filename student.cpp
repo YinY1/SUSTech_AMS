@@ -552,15 +552,16 @@ void student::set_score()
 
 void student::set_exam_info()
 {
-    string n=this->name,str[4];
+    string n=base64_decode(this->name),str[4];
     str[0] = "姓名：" + n;
-    n = this->id;
+    n = base64_decode(this->id);
     str[1]="身份证：" + n;
-	size_t num=time(0)%10000000+stoi(get_birthday());
+	string age(n, 6, 8);
+	long long num=time(0)%10000000+stoi(age);
     str[2]="准考证号：" + to_string(num);
     str[3]="考试时间：15：00-17：30";
     for(int i=0;i<4;i++)
-        strcpy_s(exam_info[i],str[i].c_str());
+        strcpy_s(exam_info[i],base64_encode(str[i]).c_str());
 }
 
 void student::print_exam_info()
@@ -890,4 +891,6 @@ void student::cpy_info(const student &r)
             score[i][j] = r.score[i][j];
     }
     overall_score=r.overall_score;
+	for (int i = 0; i < 4;i++)
+		strcpy_s(exam_info[i], base64_decode(r.exam_info[i]).c_str());
 }

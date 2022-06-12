@@ -70,8 +70,27 @@ bool admin::login()
 
 void admin::admit()
 {
+	//检查审批、录取的状态
+	fstream infile("data\\admission_list.txt", ios::in);
+	string s;
+	infile >> s;
+	if(s=="")
+	{
+		cout<<"\nRegistration is not yet closed"<<endl;
+		pause();
+		infile.close();
+		return;
+	}
+	else if(s!="ddl")
+	{
+		cout<<"\nThe admission list has been published"<<endl;
+		pause();
+		infile.close();
+		return;
+	}
+	infile.close();
+	//进行录取
     size_t num;
-    string s;
     vector<student> vs = _sort(0);
     for (auto it = vs.begin(); it != vs.end();)
     {
@@ -163,6 +182,8 @@ void admin::stu_init()
     f.seekp(0, ios::beg);
     f.write((char *)&smark, sizeof(student));
     f.close();
+	f.open("data\\admission_list.txt", ios::out);
+	f.close();
 }
 
 void admin::tea_init()

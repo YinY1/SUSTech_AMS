@@ -33,8 +33,11 @@ int main()
 			 << endl;
 		cin >> choice;
 		if (choice == "admin")
-			choice = "6";
-		int c = choice_check(choice, 0, 6);
+		{
+			admin_login();
+			continue;
+		}
+		int c = choice_check(choice, 0, 5);
 		cls();
 		switch (c)
 		{
@@ -52,11 +55,8 @@ int main()
 			break;
 		case 5:
 			middle_print("data\\kal.txt", 1, 1);
-			cout << "no guidence";
+			cout << "no guidence" << endl;
 			pause();
-			break;
-		case 6:
-			admin_login();
 			break;
 		case 0:
 			middle_print("data\\kal.txt", 1, 1); //打印logo
@@ -70,7 +70,7 @@ int main()
 	}
 }
 
-void first_run()
+void first_run() //初次运行时，自动初始化文件
 {
 	admin a;
 	fstream f("data\\student.dat", ios::in), g("data\\teacher.dat", ios::in), h("data\\admission_list.txt", ios::in);
@@ -90,6 +90,7 @@ void first_run()
 		h.open("data\\admission_list.txt", ios::out);
 		h.close();
 	}
+	
 }
 
 void stu_login()
@@ -149,28 +150,37 @@ void stu_login()
 					continue;
 				}
 				cls();
-				cout << "\n\n[INFO]已成功登出！\n"
-					 << endl;
+				if(!flag)
+				{
+					if (stu.get_id() == "")
+						{
+							cout << "\n[INFO]如果未填写身份证号码将无法通过审批！请尽快补全资料\n"
+					 			<< endl;
+							pause();
+						}
+					cout << "\n\n[INFO]已成功登出！\n"
+						<< endl;
+				}
 			}
 			else if (stu.get_is_admitted() == 1)
 			{
 				fstream f("data\\admission_list.txt", ios::in);
 				string s;
 				f >> s;
-				if(s!="姓名")
+				if (s != "姓名")
 				{
-				middle_print("-------------------------------", 1, 0);
-				middle_print("您的资料已通过初审，请准备考试", 2, 0);
-				middle_print("-------------------------------", 3, 0);
-				stu.print_exam_info();
+					middle_print("-------------------------------", 1, 0);
+					middle_print("您的资料已通过初审，请准备考试", 2, 0);
+					middle_print("-------------------------------", 3, 0);
+					stu.print_exam_info();
 				}
 				else
 				{
 					bool flag = 0;
-					while(!f.eof())
+					while (!f.eof())
 					{
 						f >> s;
-						if(s==stu.get_name())
+						if (s == stu.get_name())
 						{
 							middle_print("-------------------------------", 5, 0);
 							middle_print("恭喜你已被录取", 6, 0);
@@ -179,7 +189,7 @@ void stu_login()
 							break;
 						}
 					}
-					if(!flag)
+					if (!flag)
 					{
 						middle_print("-------------------------------", 5, 0);
 						middle_print("很遗憾，您未被录取", 6, 0);
@@ -207,7 +217,7 @@ void stu_signup()
 {
 	//判断报名是否截止
 	fstream f("data\\admission_list.txt", ios::in);
-	if(f.get()!=EOF)
+	if (f.get() != EOF)
 	{
 		cout << "\n[INFO]报名已截止！" << endl;
 		pause();
@@ -258,11 +268,6 @@ void stu_set_basic_info(student &stu)
 			pause();
 			break;
 		case 0:
-			cls();
-			if (stu.get_id() == "")
-				cout << "\n[INFO]如果未填写身份证号码将无法通过审批！请尽快补全资料\n"
-					 << endl;
-			pause();
 			cls();
 			stu.write(1);
 			return;
@@ -367,7 +372,7 @@ void admin_login()
 				 << "4.initialize teachers data\n"
 				 << "5.register teachers accounts\n"
 				 << "6.admit\n"
-				 <<"7.stop register\n"
+				 << "7.stop register\n"
 				 << "0.exit" << endl;
 			cin >> choice;
 			int c = choice_check(choice, 0, 7);
@@ -423,7 +428,10 @@ void admin_login()
 			}
 			case 7:
 				if (a.ukey_check())
+				{
 					a.deadline();
+					pause();
+				}
 				else
 				{
 					cout << "ukey error" << endl;

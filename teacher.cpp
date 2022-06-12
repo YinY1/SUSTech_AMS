@@ -321,7 +321,7 @@ void teacher::display(int choice) //特定需求查找
         string beg, end;
         while (1)
         {
-            cout << "\n[INFO]请输入起始出生日期：(如：20220601)\n"
+            cout << "\n[INFO]请输入起始出生日期：(如：20020601)\n"
                  << endl;
             cin >> beg;
             if (beg == "0")
@@ -331,7 +331,7 @@ void teacher::display(int choice) //特定需求查找
         }
         while (1)
         {
-            cout << "\n[INFO]请输入结束出生日期：(如：20220602)\n"
+            cout << "\n[INFO]请输入结束出生日期：(如：20020602)\n"
                  << endl;
             cin >> end;
             if (end == "0")
@@ -380,12 +380,13 @@ void teacher::display(int choice) //特定需求查找
                 vs.push_back(ts);
         }
         if (vs.size() == 0)
-            cout << "\n\n没有找到 " << score << " 分以上的学生" << endl;
+            cout << "\n\n[INFO]没有找到 " << score << " 分以上的学生" << endl;
         else
         {
             sort(vs.begin(), vs.end(), [](student &a, student &b)
                  { return a.get_final_score() > b.get_final_score(); });
             cls();
+			cout<<"\n[INFO] "<<score<<" 分以上的学生有："<<endl;
             for (auto i : vs)
             {
                 cout << "\n"
