@@ -50,7 +50,7 @@ vector<student> manager::_sort(int choice) //排序
     case 0: //按综评成绩排序
         for (auto it = vs.begin(); it != vs.end();)
         {
-            if (it->get_is_admitted() != 1)//删除其中审核未通过的学生
+            if (it->get_is_approved() != 1)//删除其中审核未通过的学生
                 it = vs.erase(it);
             else
                 it++;

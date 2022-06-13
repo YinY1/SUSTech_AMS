@@ -77,7 +77,7 @@ void teacher::approval()
     //从容器中删除已被审核的学生或者没有完善身份证的学生
     for (auto it = vs.begin(); it != vs.end();)
     {
-        if (it->get_is_admitted()||it->get_id()=="")
+        if (it->get_is_approved()||it->get_id()=="")
 				it = vs.erase(it);
         else
             it++;
@@ -158,7 +158,7 @@ void teacher::input_overall_score()
     //只留下已过审的
     for (auto it = vs.begin(); it != vs.end();)
     {
-        if (it->get_is_admitted() != 1||it->get_overall_score()!=0)
+        if (it->get_is_approved() != 1||it->get_overall_score()!=0)
             it = vs.erase(it);
         else
             it++;
@@ -405,7 +405,7 @@ void teacher::display(int choice) //特定需求查找
         while (f.read((char *)&s, sizeof(student)) && !endmark(s))
         {
             ts.cpy_info(s);
-            if (ts.get_is_admitted() == (choice - 6))
+            if (ts.get_is_approved() == (choice - 6))
                 vs.push_back(ts);
         }
         if (vs.empty())

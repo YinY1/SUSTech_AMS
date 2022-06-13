@@ -107,7 +107,7 @@ void stu_login()
 			middle_print("-----------------------", 1, 0);
 			middle_print(s, 2, 0);
 			middle_print("-----------------------", 3, 0);
-			if (stu.get_is_admitted() == 0)
+			if (stu.get_is_approved() == 0)
 			{
 				cout << "\n[INFO]请按照提示输入选项\n\n"
 					 << "1.查看\\修改个人基本信息\n\n2.查看\\修改家庭成员信息\n\n3.查看\\填写个人经历\n\n4.查看\\填写成绩\n\n5.设置密保问题\n\n6.修改密码\n\n7.删除账户\n\n0.退出登录\n " << endl;
@@ -162,7 +162,7 @@ void stu_login()
 						<< endl;
 				}
 			}
-			else if (stu.get_is_admitted() == 1)
+			else if (stu.get_is_approved() == 1)
 			{
 				fstream f("data\\admission_list.txt", ios::in);
 				string s;

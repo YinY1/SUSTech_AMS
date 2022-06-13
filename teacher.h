@@ -14,7 +14,7 @@ public:
     void approval();	//审批
     void signup();		//注册
     void display(int);
-    void input_overall_score();//录入综评成绩
+    void input_overall_score();//录入校测成绩
     void cpy_info(const teacher &);
     std::string get_password() { return password; }
 };
